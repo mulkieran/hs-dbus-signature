@@ -8,13 +8,16 @@ arg_map = {
    "src/hypothesis_extra_dbus_signature" : [
       "--reports=no",
       "--disable=I",
+      "--disable=bad-continuation",
       "--disable=invalid-name",
       "--msg-template='{path}:{line}: [{msg_id}({symbol}), {obj}] {msg}'"
    ],
    "tests" : [
       "--reports=no",
+      "--disable=I",
       "--disable=bad-continuation",
       "--disable=invalid-name",
+      "--disable=no-self-use",
       "--msg-template='{path}:{line}: [{msg_id}({symbol}), {obj}] {msg}'"
    ]
 }
