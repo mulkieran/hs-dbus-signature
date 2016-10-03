@@ -38,7 +38,8 @@ class _DBusSignatureStrategy(object):
 
         def _struct_fun(children):
             return builds(
-                ''.join, lists(children, min_size=1, max_size=max_struct_len)
+                ''.join,
+                lists(elements=children, min_size=1, max_size=max_struct_len)
             ).flatmap(lambda v: just('(' + v + ')'))
 
         if blacklist is None:
