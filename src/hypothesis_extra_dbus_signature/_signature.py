@@ -6,6 +6,8 @@
 A strategy for generating dbus signatures.
 """
 
+from hypothesis.errors import InvalidArgument
+
 from hypothesis.strategies import builds
 from hypothesis.strategies import defines_strategy
 from hypothesis.strategies import just
@@ -32,7 +34,17 @@ class _DBusSignatureStrategy(object):
         :param int max_complete_types: the maximum number of complete types
         :param int max_struct_len: the number of complete types in a struct
         :param str blacklist: blacklisted constructors
+
+        :raises InvalidArgument: if blacklist contains every type code
+
+        If blacklist contains all type codes, then it is impossible to
+        generate any elements from the strategy.
         """
+
+        if blacklist is not None and \
+           (frozenset(blacklist) >= frozenset(self.CODES)):
+            raise InvalidArgument("all type codes blacklisted, no signature possible")
+
         def _array_fun(children):
             return children.flatmap(lambda v: just('a' + v))
 
