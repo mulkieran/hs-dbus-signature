@@ -26,7 +26,13 @@ class _DBusSignatureStrategy(object):
     CODES = \
        ['b', 'd', 'g', 'h', 'i', 'n', 'o', 'q', 's', 't', 'u', 'v', 'x', 'y']
 
-    def __init__(self, max_codes=10, max_complete_types=10, max_struct_len=10, blacklist=None):
+    def __init__(
+       self,
+       max_codes=10,
+       max_complete_types=10,
+       max_struct_len=10,
+       blacklist=None
+    ):
         """
         Initializer.
 
@@ -91,7 +97,12 @@ class _DBusSignatureStrategy(object):
 
 
 @defines_strategy
-def dbus_signatures(max_codes=10, max_complete_types=10, max_struct_len=10, blacklist=None):
+def dbus_signatures(
+   max_codes=10,
+   max_complete_types=10,
+   max_struct_len=10,
+   blacklist=None
+):
     """
     Return a strategy for generating dbus signatures.
 
