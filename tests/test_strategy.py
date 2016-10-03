@@ -43,7 +43,7 @@ class SignatureStrategyTestCase(unittest.TestCase):
         assert [x for x in blacklist if x in signature] == []
 
     @given(
-       strategies.integers(min_value=1, max_value=10). \
+       strategies.integers(min_value=2, max_value=10). \
        flatmap(
           lambda x: strategies.tuples(
              strategies.just(x),
