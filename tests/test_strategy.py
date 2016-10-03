@@ -24,13 +24,16 @@ class SignatureStrategyTestCase(unittest.TestCase):
     """
 
     @given(
-       strategies.text(alphabet=strategies.sampled_from(_CODES), min_size=1). \
-          flatmap(
-             lambda x: strategies.tuples(
-                strategies.just(x),
-                dbus_signatures(blacklist=x)
-             )
+       strategies.text(
+          alphabet=strategies.sampled_from(_CODES),
+          min_size=1,
+          max_size=len(_CODES)
+       ).flatmap(
+          lambda x: strategies.tuples(
+             strategies.just(x),
+             dbus_signatures(blacklist=x)
           )
+       )
     )
     def testOmitsBlacklist(self, strategy):
         """
@@ -40,17 +43,17 @@ class SignatureStrategyTestCase(unittest.TestCase):
         assert [x for x in blacklist if x in signature] == []
 
     @given(
-       strategies.integers(min_value=1). \
-          flatmap(
-             lambda x: strategies.tuples(
-                strategies.just(x),
-                dbus_signatures(
+       strategies.integers(min_value=1, max_value=10). \
+       flatmap(
+          lambda x: strategies.tuples(
+             strategies.just(x),
+             dbus_signatures(
                    max_codes=x,
                    max_complete_types=1,
                    blacklist='{'
-                ).filter(lambda x: x != '')
-             )
+             ).filter(lambda x: x != '')
           )
+       )
     )
     @settings(max_examples=100)
     def testBounds(self, strategy):
