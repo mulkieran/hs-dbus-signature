@@ -28,14 +28,18 @@ class _DBusSignatureStrategy(object):
     def __init__(
        self,
        max_codes=10,
+       min_complete_types=0,
        max_complete_types=10,
        max_struct_len=10,
        blacklist=None
     ):
+        # pylint: disable=too-many-arguments
+
         """
         Initializer.
 
         :param int max_codes: the maximum number of codes in a complete type
+        :param int min_complete_types: the minimum number of complete types
         :param int max_complete_types: the maximum number of complete types
         :param int max_struct_len: the number of complete types in a struct
         :param str blacklist: blacklisted constructors
@@ -87,12 +91,17 @@ class _DBusSignatureStrategy(object):
 
         self.SIGNATURE_STRATEGY = builds(
            ''.join,
-           lists(self._COMPLETE_STRATEGY, max_size=max_complete_types)
+           lists(
+              self._COMPLETE_STRATEGY,
+              min_size=min_complete_types,
+              max_size=max_complete_types
+           )
         )
 
 
 def dbus_signatures(
    max_codes=10,
+   min_complete_types=0,
    max_complete_types=10,
    max_struct_len=10,
    blacklist=None
@@ -101,6 +110,7 @@ def dbus_signatures(
     Return a strategy for generating dbus signatures.
 
     :param int max_codes: the maximum number of type codes in a complete type
+    :param int min_complete_types: the minimum number of complete types
     :param int max_complete_types: the maximum number of complete types
     :param int max_struct_len: the maximum number of complete types in a struct
     :param str blacklist: blacklisted symbols
@@ -127,6 +137,7 @@ def dbus_signatures(
 
     return _DBusSignatureStrategy(
        max_codes=max_codes,
+       min_complete_types=min_complete_types,
        max_complete_types=max_complete_types,
        max_struct_len=max_struct_len,
        blacklist=blacklist
