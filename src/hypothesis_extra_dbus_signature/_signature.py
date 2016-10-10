@@ -80,7 +80,9 @@ class _DBusSignatureStrategy(object):
                 Builds the signature for an array of dict entries.
                 """
                 return builds(
-                    lambda x, y: x + y, self._CODE_STRATEGY, children
+                   lambda x, y: x + y,
+                   self._CODE_STRATEGY.filter(lambda x: x != 'v'),
+                   children
                 ).flatmap(lambda v: just('a' + '{' + v + '}'))
 
         self._COMPLETE_STRATEGY = recursive(
