@@ -9,7 +9,6 @@ A strategy for generating dbus signatures.
 from hypothesis.errors import InvalidArgument
 
 from hypothesis.strategies import builds
-from hypothesis.strategies import defines_strategy
 from hypothesis.strategies import just
 from hypothesis.strategies import lists
 from hypothesis.strategies import recursive
@@ -41,15 +40,9 @@ class _DBusSignatureStrategy(object):
         :param int max_struct_len: the number of complete types in a struct
         :param str blacklist: blacklisted constructors
 
-        :raises InvalidArgument: if blacklist contains every type code
-
         If blacklist contains all type codes, then it is impossible to
         generate any elements from the strategy.
         """
-
-        if blacklist is not None and \
-           (frozenset(blacklist) >= frozenset(self.CODES)):
-            raise InvalidArgument("all type codes blacklisted, no signature possible")
 
         def _array_fun(children):
             return children.flatmap(lambda v: just('a' + v))
@@ -98,7 +91,6 @@ class _DBusSignatureStrategy(object):
         )
 
 
-@defines_strategy
 def dbus_signatures(
    max_codes=10,
    max_complete_types=10,
@@ -113,6 +105,9 @@ def dbus_signatures(
     :param int max_struct_len: the maximum number of complete types in a struct
     :param str blacklist: blacklisted symbols
 
+    :rtype: strategy
+    :raises InvalidArgument: if blacklist contains every type code
+
     If included in blacklist, a symbol will not appear in a dbus signature.
     Symbols are not restricted to type codes, but may include identifiers for
     complex types, like 'a'. Including the character '(' in the string of
@@ -124,6 +119,12 @@ def dbus_signatures(
     signature may exceed max_codes by the number of dict entry types in that
     signature.
     """
+    if blacklist is not None and \
+       (frozenset(blacklist) >= frozenset(_DBusSignatureStrategy.CODES)):
+        raise InvalidArgument(
+           "all type codes blacklisted, no signature possible"
+        )
+
     return _DBusSignatureStrategy(
        max_codes=max_codes,
        max_complete_types=max_complete_types,

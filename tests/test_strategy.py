@@ -8,6 +8,7 @@ Test the signature producing strategy.
 
 import unittest
 
+from hypothesis import errors
 from hypothesis import given
 from hypothesis import settings
 from hypothesis import strategies
@@ -72,3 +73,28 @@ class SignatureStrategyTestCase(unittest.TestCase):
         Just make sure there is a result when no blacklist is specified.
         """
         pass
+
+    def testSuperSetBlacklist(self):
+        """
+        Verify correct behavior when blacklist contains all type codes.
+        """
+        codes = [
+           'b',
+           'd',
+           'g',
+           'h',
+           'i',
+           'n',
+           'o',
+           'q',
+           's',
+           't',
+           'u',
+           'v',
+           'x',
+           'y'
+        ]
+
+        blacklist = ''.join(codes)
+        with self.assertRaises(errors.InvalidArgument):
+            dbus_signatures(blacklist=blacklist)
