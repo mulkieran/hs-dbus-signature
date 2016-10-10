@@ -50,9 +50,10 @@ class SignatureStrategyTestCase(unittest.TestCase):
              strategies.just(x),
              dbus_signatures(
                    max_codes=x,
+                   min_complete_types=1,
                    max_complete_types=1,
                    blacklist='{'
-             ).filter(lambda x: x != '')
+             )
           )
        )
     )
