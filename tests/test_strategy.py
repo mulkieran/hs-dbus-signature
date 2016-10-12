@@ -13,9 +13,9 @@ from hypothesis import given
 from hypothesis import settings
 from hypothesis import strategies
 
-from hypothesis_extra_dbus_signature import dbus_signatures
+from hs_dbus_signature import dbus_signatures
 
-from hypothesis_extra_dbus_signature._signature import _DBusSignatureStrategy
+from hs_dbus_signature._signature import _DBusSignatureStrategy
 
 _CODES = _DBusSignatureStrategy.CODES + ['a', '{', '(']
 

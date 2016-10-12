@@ -9,11 +9,11 @@ def local_file(name):
 
 README = local_file("README.rst")
 
-with open(local_file("src/hypothesis_extra_dbus_signature/_version.py")) as o:
+with open(local_file("src/hs_dbus_signature/_version.py")) as o:
         exec(o.read())
 
 setuptools.setup(
-    name='hypothesis-extra-dbus-signature',
+    name='hs-dbus-signature',
     version=__version__,
     author='Anne Mulhern',
     author_email='amulhern@redhat.com',

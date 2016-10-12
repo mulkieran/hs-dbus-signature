@@ -5,7 +5,7 @@ import subprocess
 import sys
 
 arg_map = {
-   "src/hypothesis_extra_dbus_signature" : [
+   "src/hs_dbus_signature" : [
       "--reports=no",
       "--disable=I",
       "--disable=bad-continuation",
