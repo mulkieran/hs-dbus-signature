@@ -18,6 +18,34 @@ from hs_dbus_signature import dbus_signatures
 from hs_dbus_signature._signature import _DBusSignatureStrategy
 
 _CODES = _DBusSignatureStrategy.CODES + ['a', '{', '(']
+_NUM_CODES = len(_CODES)
+
+@strategies.composite
+def dbus_signature_strategy(draw):
+    """
+    Generates any valid dbus signature strategy.
+    """
+    max_codes = draw(strategies.integers(min_value=1, max_value=10))
+    min_complete_types = draw(strategies.integers(min_value=0, max_value=10))
+    max_complete_types = \
+       draw(strategies.integers(min_value=min_complete_types, max_value=10))
+    min_struct_len = draw(strategies.integers(min_value=1, max_value=10))
+    max_struct_len = \
+       draw(strategies.integers(min_value=min_struct_len, max_value=10))
+    blacklist_chars = \
+       strategies.frozensets(elements=strategies.sampled_from(_CODES)). \
+          filter(lambda x: len(x) < _NUM_CODES)
+    blacklist = \
+       draw(blacklist_chars.flatmap(lambda x: strategies.just("".join(x))))
+
+    return dbus_signatures(
+       max_codes=max_codes,
+       min_complete_types=min_complete_types,
+       max_complete_types=max_complete_types,
+       min_struct_len=min_struct_len,
+       max_struct_len=max_struct_len,
+       blacklist=blacklist
+    )
 
 class SignatureStrategyTestCase(unittest.TestCase):
     """
@@ -67,13 +95,13 @@ class SignatureStrategyTestCase(unittest.TestCase):
         leaves = [x for x in signature if x in _DBusSignatureStrategy.CODES]
         assert len(leaves) <= max_codes
 
-    @given(dbus_signatures())
-    @settings(max_examples=10)
-    def testNoBlacklist(self, signature):
+    @given(dbus_signature_strategy()) # pylint: disable=no-value-for-parameter
+    @settings(max_examples=50)
+    def testNoBlacklist(self, strategy):
         """
-        Just make sure there is a result when no blacklist is specified.
+        Just make sure there is a result for an arbitrary legal strategy.
         """
-        pass
+        self.assertIsNotNone(strategy.example())
 
     def testSuperSetBlacklist(self):
         """
