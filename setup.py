@@ -35,6 +35,9 @@ setuptools.setup(
         'Topic :: Software Development :: Libraries :: Python Modules',
         'Topic :: Software Development :: Testing',
         ],
+    install_requires = [
+        "hypothesis"
+    ],
     package_dir={"": "src"},
     packages=setuptools.find_packages("src")
     )
