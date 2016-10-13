@@ -17,7 +17,8 @@ from hs_dbus_signature import dbus_signatures
 
 from hs_dbus_signature._signature import _DBusSignatureStrategy
 
-_CODES = _DBusSignatureStrategy.CODES + ['a', '{', '(']
+_TYPE_CODES = _DBusSignatureStrategy.CODES
+_CODES = _TYPE_CODES + ['a', '{', '(']
 _NUM_CODES = len(_CODES)
 
 @strategies.composite
@@ -107,24 +108,7 @@ class SignatureStrategyTestCase(unittest.TestCase):
         """
         Verify correct behavior when blacklist contains all type codes.
         """
-        codes = [
-           'b',
-           'd',
-           'g',
-           'h',
-           'i',
-           'n',
-           'o',
-           'q',
-           's',
-           't',
-           'u',
-           'v',
-           'x',
-           'y'
-        ]
-
-        blacklist = ''.join(codes)
+        blacklist = ''.join(_TYPE_CODES)
         with self.assertRaises(errors.InvalidArgument):
             dbus_signatures(blacklist=blacklist)
 
