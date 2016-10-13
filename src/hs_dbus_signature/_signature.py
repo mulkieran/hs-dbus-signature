@@ -27,6 +27,7 @@ class _DBusSignatureStrategy(object):
 
     def __init__(
        self,
+       *,
        max_codes=10,
        min_complete_types=0,
        max_complete_types=10,
@@ -100,6 +101,7 @@ class _DBusSignatureStrategy(object):
 
 
 def dbus_signatures(
+   *,
    max_codes=10,
    min_complete_types=0,
    max_complete_types=10,
