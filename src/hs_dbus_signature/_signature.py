@@ -28,10 +28,11 @@ class _DBusSignatureStrategy(object):
     def __init__(
        self,
        *,
-       max_codes=10,
+       max_codes=5,
        min_complete_types=0,
-       max_complete_types=10,
-       max_struct_len=10,
+       max_complete_types=5,
+       min_struct_len=1,
+       max_struct_len=5,
        blacklist=None
     ):
         # pylint: disable=too-many-arguments
@@ -55,7 +56,11 @@ class _DBusSignatureStrategy(object):
         def _struct_fun(children):
             return builds(
                 ''.join,
-                lists(elements=children, min_size=1, max_size=max_struct_len)
+                lists(
+                   elements=children,
+                   min_size=min_struct_len,
+                   max_size=max_struct_len
+                )
             ).flatmap(lambda v: just('(' + v + ')'))
 
         if blacklist is None:
@@ -102,10 +107,11 @@ class _DBusSignatureStrategy(object):
 
 def dbus_signatures(
    *,
-   max_codes=10,
+   max_codes=5,
    min_complete_types=0,
-   max_complete_types=10,
-   max_struct_len=10,
+   max_complete_types=5,
+   min_struct_len=1,
+   max_struct_len=5,
    blacklist=None
 ):
     """
@@ -114,6 +120,7 @@ def dbus_signatures(
     :param int max_codes: the maximum number of type codes in a complete type
     :param int min_complete_types: the minimum number of complete types
     :param int max_complete_types: the maximum number of complete types
+    :param int min_struct_len: the minimum number of complete types in a struct
     :param int max_struct_len: the maximum number of complete types in a struct
     :param str blacklist: blacklisted symbols
 
@@ -137,10 +144,30 @@ def dbus_signatures(
            "all type codes blacklisted, no signature possible"
         )
 
+    if max_codes < 1:
+        raise InvalidArgument("can not have signature with 0 type codes")
+
+    if min_complete_types < 0:
+        raise InvalidArgument("can not have signature of negative length")
+
+    if min_struct_len < 1:
+        raise InvalidArgument("can not have struct of zero length")
+
+    if min_complete_types > max_complete_types:
+        raise InvalidArgument(
+           "minimum complete types specified greater than maximum"
+        )
+
+    if max_struct_len < min_struct_len:
+        raise InvalidArgument(
+           "minimum struct length specified is greater than maximum"
+        )
+
     return _DBusSignatureStrategy(
        max_codes=max_codes,
        min_complete_types=min_complete_types,
        max_complete_types=max_complete_types,
+       min_struct_len=min_struct_len,
        max_struct_len=max_struct_len,
        blacklist=blacklist
     ).SIGNATURE_STRATEGY

@@ -99,3 +99,38 @@ class SignatureStrategyTestCase(unittest.TestCase):
         blacklist = ''.join(codes)
         with self.assertRaises(errors.InvalidArgument):
             dbus_signatures(blacklist=blacklist)
+
+    def testConflictingMinMax(self):
+        """
+        If the minimum complete types is greater than the maximum, must fail.
+        """
+        with self.assertRaises(errors.InvalidArgument):
+            dbus_signatures(min_complete_types=3, max_complete_types=2)
+
+    def testNegativeMax(self):
+        """
+        If the max is less than 0, must fail.
+        """
+        with self.assertRaises(errors.InvalidArgument):
+            dbus_signatures(min_complete_types=-1)
+
+    def testNonPositiveMax(self):
+        """
+        If the maximum struct length is less than 1, must fail.
+        """
+        with self.assertRaises(errors.InvalidArgument):
+            dbus_signatures(min_struct_len=0)
+
+    def testConflictingMinMaxStructLen(self):
+        """
+        If the minimum complete types is greater than the maximum, must fail.
+        """
+        with self.assertRaises(errors.InvalidArgument):
+            dbus_signatures(min_struct_len=3, max_struct_len=2)
+
+    def testMaxTypeCodes(self):
+        """
+        If the maximum type codes is less than 1, must fail.
+        """
+        with self.assertRaises(errors.InvalidArgument):
+            dbus_signatures(max_codes=0)
