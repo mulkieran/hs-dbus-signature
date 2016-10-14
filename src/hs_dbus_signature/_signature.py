@@ -122,7 +122,7 @@ def dbus_signatures(
     :param int max_complete_types: the maximum number of complete types
     :param int min_struct_len: the minimum number of complete types in a struct
     :param int max_struct_len: the maximum number of complete types in a struct
-    :param str blacklist: blacklisted symbols
+    :param str blacklist: blacklisted symbols, default is None
 
     :rtype: strategy
     :raises InvalidArgument: if blacklist contains every type code
@@ -137,6 +137,14 @@ def dbus_signatures(
     of a dict entry. Thus, the actual number of type codes in a resulting
     signature may exceed max_codes by the number of dict entry types in that
     signature.
+
+    The default for all max_* values is 5. max_complete_types and
+    max_struct_len may be set to None, in which case the size of the generated
+    signatures will be unbounded. This is not really recommended.
+
+    The default for all min_* values is set to their lowest allowed value.
+    Structs may not be empty, so min_struct_len is 1. However, the empty
+    string is a valid signature, so min_complete_types is 0.
     """
     if blacklist is not None and \
        (frozenset(blacklist) >= frozenset(_DBusSignatureStrategy.CODES)):
@@ -153,12 +161,13 @@ def dbus_signatures(
     if min_struct_len < 1:
         raise InvalidArgument("can not have struct of zero length")
 
-    if min_complete_types > max_complete_types:
+    if max_complete_types is not None and \
+       min_complete_types > max_complete_types:
         raise InvalidArgument(
            "minimum complete types specified greater than maximum"
         )
 
-    if max_struct_len < min_struct_len:
+    if max_struct_len is not None and max_struct_len < min_struct_len:
         raise InvalidArgument(
            "minimum struct length specified is greater than maximum"
         )

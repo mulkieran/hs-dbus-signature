@@ -28,16 +28,28 @@ def dbus_signature_strategy(draw):
     """
     max_codes = draw(strategies.integers(min_value=1, max_value=10))
     min_complete_types = draw(strategies.integers(min_value=0, max_value=10))
-    max_complete_types = \
-       draw(strategies.integers(min_value=min_complete_types, max_value=10))
+    max_complete_types = draw(
+       strategies.one_of(
+          strategies.integers(min_value=min_complete_types, max_value=10),
+          strategies.none()
+       )
+    )
     min_struct_len = draw(strategies.integers(min_value=1, max_value=10))
-    max_struct_len = \
-       draw(strategies.integers(min_value=min_struct_len, max_value=10))
+    max_struct_len = draw(
+       strategies.one_of(
+          strategies.integers(min_value=min_struct_len, max_value=10),
+          strategies.none()
+       )
+    )
     blacklist_chars = \
        strategies.frozensets(elements=strategies.sampled_from(_CODES)). \
           filter(lambda x: len(x) < _NUM_CODES)
-    blacklist = \
-       draw(blacklist_chars.flatmap(lambda x: strategies.just("".join(x))))
+    blacklist = draw(
+       strategies.one_of(
+          blacklist_chars.flatmap(lambda x: strategies.just("".join(x))),
+          strategies.none()
+       )
+    )
 
     return dbus_signatures(
        max_codes=max_codes,
