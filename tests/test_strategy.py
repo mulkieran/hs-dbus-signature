@@ -42,8 +42,7 @@ def dbus_signature_strategy(draw):
        )
     )
     blacklist_chars = \
-       strategies.frozensets(elements=strategies.sampled_from(_CODES)). \
-          filter(lambda x: len(x) < _NUM_CODES)
+       strategies.frozensets(elements=strategies.sampled_from(_TYPE_CODES))
     blacklist = draw(
        strategies.one_of(
           blacklist_chars.flatmap(lambda x: strategies.just("".join(x))),
@@ -51,13 +50,30 @@ def dbus_signature_strategy(draw):
        )
     )
 
+    startswith_sample = \
+       [x for x in _CODES if x not in \
+          (frozenset() if blacklist is None else blacklist)]
+    startswith_chars = \
+       strategies.frozensets(
+          elements=strategies.sampled_from(startswith_sample)
+       )
+    startswith = draw(
+       strategies.one_of(
+          startswith_chars.flatmap(lambda x: strategies.just("".join(x))),
+          strategies.none()
+       )
+    )
+    if startswith is not None:
+       startswith = None if len(startswith) < 5 else startswith
+
     return dbus_signatures(
        max_codes=max_codes,
        min_complete_types=min_complete_types,
        max_complete_types=max_complete_types,
        min_struct_len=min_struct_len,
        max_struct_len=max_struct_len,
-       blacklist=blacklist
+       blacklist=blacklist,
+       startswith=startswith
     )
 
 class SignatureStrategyTestCase(unittest.TestCase):
@@ -83,6 +99,29 @@ class SignatureStrategyTestCase(unittest.TestCase):
         """
         (blacklist, signature) = strategy
         assert [x for x in blacklist if x in signature] == []
+
+    @given(
+       strategies.text(
+          alphabet=strategies.sampled_from(_TYPE_CODES),
+          min_size=5,
+          max_size=len(_CODES)
+       ).flatmap(
+          lambda x: strategies.tuples(
+             strategies.just(x),
+             dbus_signatures(
+                startswith=x,
+                min_complete_types=1,
+                max_complete_types=1
+             )
+          )
+       )
+    )
+    def testStartswith(self, strategy):
+        """
+        Make sure element in signature starts with some code in startswith.
+        """
+        (startswith, signature) = strategy
+        assert any(signature.startswith(c) for c in startswith)
 
     @given(
        strategies.integers(min_value=2, max_value=10). \
@@ -158,3 +197,24 @@ class SignatureStrategyTestCase(unittest.TestCase):
         """
         with self.assertRaises(errors.InvalidArgument):
             dbus_signatures(max_codes=0)
+
+    def testEmptyStartswith(self):
+        """
+        If startswith is empty, no signature is possible.
+        """
+        with self.assertRaises(errors.InvalidArgument):
+            dbus_signatures(startswith="")
+
+    def testImpossibleStartswith(self):
+        """
+        If startswith is an unknown character, no signature is possible.
+        """
+        with self.assertRaises(errors.InvalidArgument):
+            dbus_signatures(startswith=".")
+
+    def testBlacklistedStartswith(self):
+        """
+        If all codes in startswith are blacklisted, no signature is possible.
+        """
+        with self.assertRaises(errors.InvalidArgument):
+            dbus_signatures(startswith="a", blacklist="a")

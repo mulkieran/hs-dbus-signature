@@ -33,7 +33,8 @@ class _DBusSignatureStrategy(object):
        max_complete_types=5,
        min_struct_len=1,
        max_struct_len=5,
-       blacklist=None
+       blacklist=None,
+       startswith=None
     ):
         # pylint: disable=too-many-arguments
 
@@ -45,6 +46,7 @@ class _DBusSignatureStrategy(object):
         :param int max_complete_types: the maximum number of complete types
         :param int max_struct_len: the number of complete types in a struct
         :param str blacklist: blacklisted constructors
+        :param str startswith: list of codes that may begin complete types
 
         If blacklist contains all type codes, then it is impossible to
         generate any elements from the strategy.
@@ -95,6 +97,11 @@ class _DBusSignatureStrategy(object):
            max_leaves=max_codes
         )
 
+        if startswith is not None:
+            self._COMPLETE_STRATEGY = self._COMPLETE_STRATEGY.filter(
+               lambda x: any(x.startswith(c) for c in startswith)
+            )
+
         self.SIGNATURE_STRATEGY = builds(
            ''.join,
            lists(
@@ -112,7 +119,8 @@ def dbus_signatures(
    max_complete_types=5,
    min_struct_len=1,
    max_struct_len=5,
-   blacklist=None
+   blacklist=None,
+   startswith=None
 ):
     """
     Return a strategy for generating dbus signatures.
@@ -123,6 +131,7 @@ def dbus_signatures(
     :param int min_struct_len: the minimum number of complete types in a struct
     :param int max_struct_len: the maximum number of complete types in a struct
     :param str blacklist: blacklisted symbols, default is None
+    :param str startswith: permitted initial symbols for complete types
 
     :rtype: strategy
     :raises InvalidArgument: if blacklist contains every type code
@@ -146,10 +155,19 @@ def dbus_signatures(
     Structs may not be empty, so min_struct_len is 1. However, the empty
     string is a valid signature, so min_complete_types is 0.
     """
-    if blacklist is not None and \
-       (frozenset(blacklist) >= frozenset(_DBusSignatureStrategy.CODES)):
+    codes_set = frozenset(_DBusSignatureStrategy.CODES)
+
+    blacklist_set = frozenset() if blacklist is None else frozenset(blacklist)
+    if blacklist_set >= codes_set:
         raise InvalidArgument(
            "all type codes blacklisted, no signature possible"
+        )
+
+    if startswith is not None and \
+       ((frozenset(startswith) - blacklist_set) & \
+       (codes_set | frozenset(('a', '{', '('))) == frozenset()):
+        raise InvalidArgument(
+           "all codes requested to start with impossible, no signature possible"
         )
 
     if max_codes < 1:
@@ -178,5 +196,6 @@ def dbus_signatures(
        max_complete_types=max_complete_types,
        min_struct_len=min_struct_len,
        max_struct_len=max_struct_len,
-       blacklist=blacklist
+       blacklist=blacklist,
+       startswith=startswith
     ).SIGNATURE_STRATEGY
