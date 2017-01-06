@@ -36,7 +36,7 @@ Make use of the strategy in your tests, e.g. ::
 
 Use the parameters to omit dicts ::
 
-    >>> strategy = dbus_signatures(blacklist="{")
+    >>> strategy = dbus_signatures(exclude_dicts=True)
     >>> strategy.example()
     '(gnggg)(n)(gn)(nnnnn)(nn)'
 
