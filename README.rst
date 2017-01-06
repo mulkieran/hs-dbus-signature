@@ -1,13 +1,13 @@
 A Hypothesis Strategy for Generating Arbitrary DBus Signatures
 ==============================================================
 
-This package contains a Hypothesis strategy for generating dbus signatures.
-An informal specification of dbus signatures is available at:
+This package contains a Hypothesis strategy for generating DBus signatures.
+An informal specification of DBus signatures is available at:
 https://dbus.freedesktop.org/doc/dbus-specification.html.
 
 The strategy is intended to be both sound and complete. That is, it should
-never generate an invalid dbus signature and it should be capable, modulo
-size constraints, of generating any valid dbus signature.
+never generate an invalid DBus signature and it should be capable, modulo
+size constraints, of generating any valid DBus signature.
 
 Usage
 -----
