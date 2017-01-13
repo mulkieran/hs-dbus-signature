@@ -33,9 +33,13 @@ class _DBusSignatureStrategy(object):
        max_complete_types=5,
        min_struct_len=1,
        max_struct_len=5,
+       exclude_arrays=False,
+       exclude_dicts=False,
+       exclude_structs=False,
        blacklist=None
     ):
         # pylint: disable=too-many-arguments
+        # pylint: disable=too-many-locals
 
         """
         Initializer.
@@ -44,6 +48,9 @@ class _DBusSignatureStrategy(object):
         :param int min_complete_types: the minimum number of complete types
         :param int max_complete_types: the maximum number of complete types
         :param int max_struct_len: the number of complete types in a struct
+        :param bool exclude_arrays: whether to exclude arrays
+        :param bool exclude_dicts: whether to exclude dicts
+        :param bool exclude_structs: whether to exclude structs
         :param str blacklist: blacklisted constructors
 
         If blacklist contains all type codes, then it is impossible to
@@ -63,20 +70,16 @@ class _DBusSignatureStrategy(object):
                 )
             ).flatmap(lambda v: just('(' + v + ')'))
 
-        if blacklist is None:
-            codes = self.CODES[:]
-            array_fun = _array_fun
-            struct_fun = _struct_fun
+        codes = self.CODES[:] \
+           if blacklist is None \
+           else [x for x in self.CODES if x not in frozenset(blacklist)]
 
-        else:
-            codes = [x for x in self.CODES if x not in frozenset(blacklist)]
-            array_fun = (lambda x: x) if 'a' in blacklist else _array_fun
-            struct_fun = (lambda x: x) if '(' in blacklist else _struct_fun
+        array_fun = (lambda x: x) if exclude_arrays else _array_fun
+        struct_fun = (lambda x: x) if exclude_structs else _struct_fun
 
         self._CODE_STRATEGY = sampled_from(codes)
-
-        if blacklist is not None and ('{' in blacklist or 'a' in blacklist):
-            dict_fun = lambda children: children
+        if exclude_dicts:
+            dict_fun = lambda x: x
         else:
             def dict_fun(children):
                 """
@@ -112,6 +115,9 @@ def dbus_signatures(
    max_complete_types=5,
    min_struct_len=1,
    max_struct_len=5,
+   exclude_arrays=False,
+   exclude_dicts=False,
+   exclude_structs=False,
    blacklist=None
 ):
     """
@@ -122,18 +128,17 @@ def dbus_signatures(
     :param int max_complete_types: the maximum number of complete types
     :param int min_struct_len: the minimum number of complete types in a struct
     :param int max_struct_len: the maximum number of complete types in a struct
+    :param bool exclude_arrays: whether to exclude arrays
+    :param bool exclude_dicts: whether to exclude dicts
+    :param bool exclude_structs: whether to exclude structs
     :param str blacklist: blacklisted symbols, default is None
 
     :rtype: strategy
     :raises InvalidArgument: if blacklist contains every type code
 
     If included in blacklist, a symbol will not appear in a dbus signature.
-    Symbols are not restricted to type codes, but may include identifiers for
-    complex types, like 'a'. Including the character '(' in the string of
-    blacklisted symbols will prevent the inclusion of struct signatures in
-    a dbus signature; the inclusion of '{' will do the same for dict entries.
 
-    For technical reason, the max_codes limit does not apply to the first type
+    For technical reasons, the max_codes limit does not apply to the first type
     of a dict entry. Thus, the actual number of type codes in a resulting
     signature may exceed max_codes by the number of dict entry types in that
     signature.
@@ -178,5 +183,8 @@ def dbus_signatures(
        max_complete_types=max_complete_types,
        min_struct_len=min_struct_len,
        max_struct_len=max_struct_len,
+       exclude_arrays=exclude_arrays,
+       exclude_dicts=exclude_dicts,
+       exclude_structs=exclude_structs,
        blacklist=blacklist
     ).SIGNATURE_STRATEGY
