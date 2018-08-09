@@ -1,7 +1,6 @@
 # This Source Code Form is subject to the terms of the Mozilla Public License,
 # v. 2.0. If a copy of the MPL was not distributed with this file, You can
 # obtain one at http://mozilla.org/MPL/2.0/.
-
 """
 A strategy for generating dbus signatures.
 """
@@ -15,7 +14,7 @@ from hypothesis.strategies import recursive
 from hypothesis.strategies import sampled_from
 
 
-class _DBusSignatureStrategy(object):
+class _DBusSignatureStrategy():
     """
     Initializes a d-bus signature generating strategy, modified according to
     the parameters.
@@ -25,22 +24,19 @@ class _DBusSignatureStrategy(object):
     CODES = \
        ['b', 'd', 'g', 'h', 'i', 'n', 'o', 'q', 's', 't', 'u', 'v', 'x', 'y']
 
-    def __init__(
-       self,
-       *,
-       max_codes=5,
-       min_complete_types=0,
-       max_complete_types=5,
-       min_struct_len=1,
-       max_struct_len=5,
-       exclude_arrays=False,
-       exclude_dicts=False,
-       exclude_structs=False,
-       blacklist=None
-    ):
+    def __init__(self,
+                 *,
+                 max_codes=5,
+                 min_complete_types=0,
+                 max_complete_types=5,
+                 min_struct_len=1,
+                 max_struct_len=5,
+                 exclude_arrays=False,
+                 exclude_dicts=False,
+                 exclude_structs=False,
+                 blacklist=None):
         # pylint: disable=too-many-arguments
         # pylint: disable=too-many-locals
-
         """
         Initializer.
 
@@ -61,14 +57,12 @@ class _DBusSignatureStrategy(object):
             return children.flatmap(lambda v: just('a' + v))
 
         def _struct_fun(children):
-            return builds(
-                ''.join,
-                lists(
-                   elements=children,
-                   min_size=min_struct_len,
-                   max_size=max_struct_len
-                )
-            ).flatmap(lambda v: just('(' + v + ')'))
+            return builds(''.join,
+                          lists(
+                              elements=children,
+                              min_size=min_struct_len,
+                              max_size=max_struct_len)).flatmap(
+                                  lambda v: just('(' + v + ')'))
 
         codes = self.CODES[:] \
            if blacklist is None \
@@ -81,45 +75,40 @@ class _DBusSignatureStrategy(object):
         if exclude_dicts:
             dict_fun = lambda x: x
         else:
+
             def dict_fun(children):
                 """
                 Builds the signature for an array of dict entries.
                 """
                 return builds(
-                   lambda x, y: x + y,
-                   self._CODE_STRATEGY.filter(lambda x: x != 'v'),
-                   children
-                ).flatmap(lambda v: just('a' + '{' + v + '}'))
+                    lambda x, y: x + y,
+                    self._CODE_STRATEGY.filter(lambda x: x != 'v'),
+                    children).flatmap(lambda v: just('a' + '{' + v + '}'))
 
         self._COMPLETE_STRATEGY = recursive(
-           self._CODE_STRATEGY,
-           lambda children: \
+            self._CODE_STRATEGY,
+            lambda children: \
               struct_fun(children) | array_fun(children) | dict_fun(children),
-           max_leaves=max_codes
+            max_leaves=max_codes
         )
 
-        self.SIGNATURE_STRATEGY = builds(
-           ''.join,
-           lists(
-              self._COMPLETE_STRATEGY,
-              min_size=min_complete_types,
-              max_size=max_complete_types
-           )
-        )
+        self.SIGNATURE_STRATEGY = builds(''.join,
+                                         lists(
+                                             self._COMPLETE_STRATEGY,
+                                             min_size=min_complete_types,
+                                             max_size=max_complete_types))
 
 
-def dbus_signatures(
-   *,
-   max_codes=5,
-   min_complete_types=0,
-   max_complete_types=5,
-   min_struct_len=1,
-   max_struct_len=5,
-   exclude_arrays=False,
-   exclude_dicts=False,
-   exclude_structs=False,
-   blacklist=None
-):
+def dbus_signatures(*,
+                    max_codes=5,
+                    min_complete_types=0,
+                    max_complete_types=5,
+                    min_struct_len=1,
+                    max_struct_len=5,
+                    exclude_arrays=False,
+                    exclude_dicts=False,
+                    exclude_structs=False,
+                    blacklist=None):
     """
     Return a strategy for generating dbus signatures.
 
@@ -154,8 +143,7 @@ def dbus_signatures(
     if blacklist is not None and \
        (frozenset(blacklist) >= frozenset(_DBusSignatureStrategy.CODES)):
         raise InvalidArgument(
-           "all type codes blacklisted, no signature possible"
-        )
+            "all type codes blacklisted, no signature possible")
 
     if max_codes < 1:
         raise InvalidArgument("can not have signature with 0 type codes")
@@ -169,22 +157,19 @@ def dbus_signatures(
     if max_complete_types is not None and \
        min_complete_types > max_complete_types:
         raise InvalidArgument(
-           "minimum complete types specified greater than maximum"
-        )
+            "minimum complete types specified greater than maximum")
 
     if max_struct_len is not None and max_struct_len < min_struct_len:
         raise InvalidArgument(
-           "minimum struct length specified is greater than maximum"
-        )
+            "minimum struct length specified is greater than maximum")
 
     return _DBusSignatureStrategy(
-       max_codes=max_codes,
-       min_complete_types=min_complete_types,
-       max_complete_types=max_complete_types,
-       min_struct_len=min_struct_len,
-       max_struct_len=max_struct_len,
-       exclude_arrays=exclude_arrays,
-       exclude_dicts=exclude_dicts,
-       exclude_structs=exclude_structs,
-       blacklist=blacklist
-    ).SIGNATURE_STRATEGY
+        max_codes=max_codes,
+        min_complete_types=min_complete_types,
+        max_complete_types=max_complete_types,
+        min_struct_len=min_struct_len,
+        max_struct_len=max_struct_len,
+        exclude_arrays=exclude_arrays,
+        exclude_dicts=exclude_dicts,
+        exclude_structs=exclude_structs,
+        blacklist=blacklist).SIGNATURE_STRATEGY

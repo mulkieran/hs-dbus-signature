@@ -4,13 +4,15 @@ import setuptools
 if sys.version_info[0] < 3:
     from codecs import open
 
+
 def local_file(name):
     return os.path.relpath(os.path.join(os.path.dirname(__file__), name))
+
 
 README = local_file("README.rst")
 
 with open(local_file("src/hs_dbus_signature/_version.py")) as o:
-        exec(o.read())
+    exec(o.read())
 
 setuptools.setup(
     name='hs-dbus-signature',
@@ -33,10 +35,7 @@ setuptools.setup(
         'Topic :: Software Development :: Libraries',
         'Topic :: Software Development :: Libraries :: Python Modules',
         'Topic :: Software Development :: Testing',
-        ],
-    install_requires = [
-        "hypothesis"
     ],
+    install_requires=["hypothesis"],
     package_dir={"": "src"},
-    packages=setuptools.find_packages("src")
-    )
+    packages=setuptools.find_packages("src"))
