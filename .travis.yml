@@ -10,6 +10,7 @@ language: python
 
 env:
   matrix:
+    - TASK=fmt
     - TASK=lint
     - TASK=test
     - TASK=coverage
