@@ -86,10 +86,10 @@ class _DBusSignatureStrategy(object):
                     children).flatmap(lambda v: just('a' + '{' + v + '}'))
 
         self._COMPLETE_STRATEGY = recursive(
-           self._CODE_STRATEGY,
-           lambda children: \
+            self._CODE_STRATEGY,
+            lambda children: \
               struct_fun(children) | array_fun(children) | dict_fun(children),
-           max_leaves=max_codes
+            max_leaves=max_codes
         )
 
         self.SIGNATURE_STRATEGY = builds(''.join,
