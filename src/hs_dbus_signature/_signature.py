@@ -14,7 +14,7 @@ from hypothesis.strategies import recursive
 from hypothesis.strategies import sampled_from
 
 
-class _DBusSignatureStrategy(object):
+class _DBusSignatureStrategy():
     """
     Initializes a d-bus signature generating strategy, modified according to
     the parameters.
