@@ -4,6 +4,7 @@
 .cache
 .coverage
 .hypothesis
+.pytest_cache
 .tox
 build
 dist
