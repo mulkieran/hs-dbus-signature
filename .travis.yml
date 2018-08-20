@@ -8,15 +8,24 @@ branches:
     - master
 language: python
 
-env:
-  matrix:
-    - TASK=fmt
-    - TASK=lint
-    - TASK=test
-    - TASK=coverage
+matrix:
+    include:
+        - python: 3.6
+          env: TASK=fmt
+        - python: 3.6
+          env: TASK=lint
+        - python: 3.6
+          env: TASK=test
+        - python: 3.6
+          env: TASK=coverage
+        - python: 3.5
+          env: TASK=test
+        - python: 3.5
+          env: TASK=coverage
+        - python: 3.4
+          env: TASK=test
+        - python: 3.4
+          env: TASK=coverage
 
 script:
     - make -f Makefile $TASK
-
-python:
-  - "3.4"
