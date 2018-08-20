@@ -104,13 +104,14 @@ class SignatureStrategyTestCase(unittest.TestCase):
         leaves = [x for x in signature if x in _DBusSignatureStrategy.CODES]
         assert len(leaves) <= max_codes
 
-    @given(dbus_signature_strategy())  # pylint: disable=no-value-for-parameter
+    @given(strategies.data())  # pylint: disable=no-value-for-parameter
     @settings(max_examples=50)
-    def testNoBlacklist(self, strategy):
+    def testNoBlacklist(self, data):
         """
         Just make sure there is a result for an arbitrary legal strategy.
         """
-        self.assertIsNotNone(strategy.example())
+        # pylint: disable=no-value-for-parameter
+        data.draw(data.draw(dbus_signature_strategy()))
 
     def testSuperSetBlacklist(self):
         """
