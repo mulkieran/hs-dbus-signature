@@ -11,6 +11,7 @@ from hypothesis import errors
 from hypothesis import given
 from hypothesis import settings
 from hypothesis import strategies
+from hypothesis import HealthCheck
 
 from hs_dbus_signature import dbus_signatures
 
@@ -73,6 +74,7 @@ class SignatureStrategyTestCase(unittest.TestCase):
             )
         )
     )
+    @settings(max_examples=50, suppress_health_check=[HealthCheck.too_slow])
     def testOmitsBlacklist(self, strategy):
         """
         Make sure all characters in blacklist are missing from signature.
@@ -94,7 +96,7 @@ class SignatureStrategyTestCase(unittest.TestCase):
             )
         )
     )
-    @settings(max_examples=100)
+    @settings(max_examples=50, suppress_health_check=[HealthCheck.too_slow])
     def testBounds(self, strategy):
         """
         Verify that the number of codes in a single complete type does not
@@ -105,7 +107,7 @@ class SignatureStrategyTestCase(unittest.TestCase):
         assert len(leaves) <= max_codes
 
     @given(strategies.data())  # pylint: disable=no-value-for-parameter
-    @settings(max_examples=50)
+    @settings(max_examples=50, suppress_health_check=[HealthCheck.too_slow])
     def testNoBlacklist(self, data):
         """
         Just make sure there is a result for an arbitrary legal strategy.
