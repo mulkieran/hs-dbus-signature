@@ -11,6 +11,7 @@ from hypothesis import errors
 from hypothesis import given
 from hypothesis import settings
 from hypothesis import strategies
+from hypothesis import HealthCheck
 
 from hs_dbus_signature import dbus_signatures
 
@@ -25,16 +26,16 @@ def dbus_signature_strategy(draw):
     """
     Generates any valid dbus signature strategy.
     """
-    max_codes = draw(strategies.integers(min_value=1, max_value=10))
-    min_complete_types = draw(strategies.integers(min_value=0, max_value=10))
+    max_codes = draw(strategies.integers(min_value=1, max_value=5))
+    min_complete_types = draw(strategies.integers(min_value=0, max_value=5))
     max_complete_types = draw(
         strategies.one_of(
-            strategies.integers(min_value=min_complete_types, max_value=10),
+            strategies.integers(min_value=min_complete_types, max_value=5),
             strategies.none()))
-    min_struct_len = draw(strategies.integers(min_value=1, max_value=10))
+    min_struct_len = draw(strategies.integers(min_value=1, max_value=5))
     max_struct_len = draw(
         strategies.one_of(
-            strategies.integers(min_value=min_struct_len, max_value=10),
+            strategies.integers(min_value=min_struct_len, max_value=5),
             strategies.none()))
     blacklist_chars = \
        strategies.frozensets(elements=strategies.sampled_from(_CODES)). \
@@ -73,6 +74,7 @@ class SignatureStrategyTestCase(unittest.TestCase):
             )
         )
     )
+    @settings(max_examples=50, suppress_health_check=[HealthCheck.too_slow])
     def testOmitsBlacklist(self, strategy):
         """
         Make sure all characters in blacklist are missing from signature.
@@ -94,7 +96,7 @@ class SignatureStrategyTestCase(unittest.TestCase):
             )
         )
     )
-    @settings(max_examples=100)
+    @settings(max_examples=50, suppress_health_check=[HealthCheck.too_slow])
     def testBounds(self, strategy):
         """
         Verify that the number of codes in a single complete type does not
@@ -104,13 +106,14 @@ class SignatureStrategyTestCase(unittest.TestCase):
         leaves = [x for x in signature if x in _DBusSignatureStrategy.CODES]
         assert len(leaves) <= max_codes
 
-    @given(dbus_signature_strategy())  # pylint: disable=no-value-for-parameter
-    @settings(max_examples=50)
-    def testNoBlacklist(self, strategy):
+    @given(strategies.data())  # pylint: disable=no-value-for-parameter
+    @settings(max_examples=50, suppress_health_check=[HealthCheck.too_slow])
+    def testNoBlacklist(self, data):
         """
         Just make sure there is a result for an arbitrary legal strategy.
         """
-        self.assertIsNotNone(strategy.example())
+        # pylint: disable=no-value-for-parameter
+        data.draw(data.draw(dbus_signature_strategy()))
 
     def testSuperSetBlacklist(self):
         """
