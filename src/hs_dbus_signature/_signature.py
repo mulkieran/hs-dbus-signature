@@ -7,96 +7,13 @@ A strategy for generating dbus signatures.
 
 from hypothesis.errors import InvalidArgument
 
-from hypothesis.strategies import builds
-from hypothesis.strategies import just
 from hypothesis.strategies import lists
 from hypothesis.strategies import recursive
 from hypothesis.strategies import sampled_from
+from hypothesis.strategies import tuples
 
 
-class _DBusSignatureStrategy():
-    """
-    Initializes a d-bus signature generating strategy, modified according to
-    the parameters.
-    """
-    # pylint: disable=too-few-public-methods
-
-    CODES = \
-       ['b', 'd', 'g', 'h', 'i', 'n', 'o', 'q', 's', 't', 'u', 'v', 'x', 'y']
-
-    def __init__(self,
-                 *,
-                 max_codes=5,
-                 min_complete_types=0,
-                 max_complete_types=5,
-                 min_struct_len=1,
-                 max_struct_len=5,
-                 exclude_arrays=False,
-                 exclude_dicts=False,
-                 exclude_structs=False,
-                 blacklist=None):
-        # pylint: disable=too-many-arguments
-        # pylint: disable=too-many-locals
-        """
-        Initializer.
-
-        :param int max_codes: the maximum number of codes in a complete type
-        :param int min_complete_types: the minimum number of complete types
-        :param int max_complete_types: the maximum number of complete types
-        :param int max_struct_len: the number of complete types in a struct
-        :param bool exclude_arrays: whether to exclude arrays
-        :param bool exclude_dicts: whether to exclude dicts
-        :param bool exclude_structs: whether to exclude structs
-        :param str blacklist: blacklisted constructors
-
-        If blacklist contains all type codes, then it is impossible to
-        generate any elements from the strategy.
-        """
-
-        def _array_fun(children):
-            return children.flatmap(lambda v: just('a' + v))
-
-        def _struct_fun(children):
-            return builds(''.join,
-                          lists(
-                              elements=children,
-                              min_size=min_struct_len,
-                              max_size=max_struct_len)).flatmap(
-                                  lambda v: just('(' + v + ')'))
-
-        codes = self.CODES[:] \
-           if blacklist is None \
-           else [x for x in self.CODES if x not in frozenset(blacklist)]
-
-        array_fun = (lambda x: x) if exclude_arrays else _array_fun
-        struct_fun = (lambda x: x) if exclude_structs else _struct_fun
-
-        self._CODE_STRATEGY = sampled_from(codes)
-        if exclude_dicts:
-            dict_fun = lambda x: x
-        else:
-
-            def dict_fun(children):
-                """
-                Builds the signature for an array of dict entries.
-                """
-                return builds(
-                    lambda x, y: x + y,
-                    self._CODE_STRATEGY.filter(lambda x: x != 'v'),
-                    children).flatmap(lambda v: just('a' + '{' + v + '}'))
-
-        self._COMPLETE_STRATEGY = recursive(
-            self._CODE_STRATEGY,
-            lambda children: \
-              struct_fun(children) | array_fun(children) | dict_fun(children),
-            max_leaves=max_codes
-        )
-
-        self.SIGNATURE_STRATEGY = builds(''.join,
-                                         lists(
-                                             self._COMPLETE_STRATEGY,
-                                             min_size=min_complete_types,
-                                             max_size=max_complete_types))
+_CODES = ('b', 'd', 'g', 'h', 'i', 'n', 'o', 'q', 's', 't', 'u', 'v', 'x', 'y')
 
 
 def dbus_signatures(*,
@@ -140,8 +57,7 @@ def dbus_signatures(*,
     Structs may not be empty, so min_struct_len is 1. However, the empty
     string is a valid signature, so min_complete_types is 0.
     """
-    if blacklist is not None and \
-       (frozenset(blacklist) >= frozenset(_DBusSignatureStrategy.CODES)):
+    if not set(_CODES) - set(blacklist or ''):
         raise InvalidArgument(
             "all type codes blacklisted, no signature possible")
 
@@ -163,13 +79,23 @@ def dbus_signatures(*,
         raise InvalidArgument(
             "minimum struct length specified is greater than maximum")
 
-    return _DBusSignatureStrategy(
-        max_codes=max_codes,
-        min_complete_types=min_complete_types,
-        max_complete_types=max_complete_types,
-        min_struct_len=min_struct_len,
-        max_struct_len=max_struct_len,
-        exclude_arrays=exclude_arrays,
-        exclude_dicts=exclude_dicts,
-        exclude_structs=exclude_structs,
-        blacklist=blacklist).SIGNATURE_STRATEGY
+    codes = [x for x in _CODES if x not in (blacklist or '')]
+
+    def extend(strat):
+        if not exclude_arrays:
+            strat |= strat.map(lambda v: 'a' + v)
+        if not exclude_structs:
+            strat |= lists(
+                strat, min_size=min_struct_len, max_size=max_struct_len
+            ).map(lambda v: '(' + ''.join(v) + ')')
+        if not exclude_dicts:
+            strat |= tuples(
+                sampled_from([c for c in codes if c != 'v']), strat
+            ).map(lambda kv: 'a{%s%s}' % kv)
+        return strat
+
+    return lists(
+        recursive(sampled_from(codes), extend, max_leaves=max_codes),
+        min_size=min_complete_types,
+        max_size=max_complete_types
+    ).map(''.join)
