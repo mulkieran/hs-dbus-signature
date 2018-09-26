@@ -15,10 +15,7 @@ from hypothesis import HealthCheck
 
 from hs_dbus_signature import dbus_signatures
 
-from hs_dbus_signature._signature import _DBusSignatureStrategy
-
-_CODES = _DBusSignatureStrategy.CODES
-_NUM_CODES = len(_CODES)
+from hs_dbus_signature._signature import _CODES
 
 
 @strategies.composite
@@ -37,13 +34,9 @@ def dbus_signature_strategy(draw):
         strategies.one_of(
             strategies.integers(min_value=min_struct_len, max_value=5),
             strategies.none()))
-    blacklist_chars = \
-       strategies.frozensets(elements=strategies.sampled_from(_CODES)). \
-          filter(lambda x: len(x) < _NUM_CODES)
-    blacklist = draw(
-        strategies.one_of(
-            blacklist_chars.flatmap(lambda x: strategies.just("".join(x))),
-            strategies.none()))
+    blacklist_chars = strategies.frozensets(
+        elements=strategies.sampled_from(_CODES), max_size=len(_CODES) - 1)
+    blacklist = draw(strategies.none() | blacklist_chars.map(''.join))
 
     return dbus_signatures(
         max_codes=max_codes,
@@ -51,9 +44,9 @@ def dbus_signature_strategy(draw):
         max_complete_types=max_complete_types,
         min_struct_len=min_struct_len,
         max_struct_len=max_struct_len,
-        exclude_arrays=draw(strategies.booleans()),
-        exclude_dicts=draw(strategies.booleans()),
-        exclude_structs=draw(strategies.booleans()),
+        exclude_arrays=not draw(strategies.booleans()),
+        exclude_dicts=not draw(strategies.booleans()),
+        exclude_structs=not draw(strategies.booleans()),
         blacklist=blacklist)
 
 
@@ -63,10 +56,9 @@ class SignatureStrategyTestCase(unittest.TestCase):
     """
 
     @given(
-        strategies.text(
-            alphabet=strategies.sampled_from(_CODES),
-            min_size=1,
-            max_size=len(_CODES)
+        strategies.lists(
+            strategies.sampled_from(_CODES),
+            min_size=1, max_size=len(_CODES) - 1, unique=True
         ).flatmap(
             lambda x: strategies.tuples(
                 strategies.just(x),
@@ -103,7 +95,7 @@ class SignatureStrategyTestCase(unittest.TestCase):
         exceed the max number of codes, so long as dict entry types are omitted.
         """
         (max_codes, signature) = strategy
-        leaves = [x for x in signature if x in _DBusSignatureStrategy.CODES]
+        leaves = [x for x in signature if x in _CODES]
         assert len(leaves) <= max_codes
 
     @given(strategies.data())  # pylint: disable=no-value-for-parameter
