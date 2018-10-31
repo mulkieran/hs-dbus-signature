@@ -13,7 +13,9 @@ from hypothesis import settings
 from hypothesis import strategies
 from hypothesis import HealthCheck
 
-from hs_dbus_signature import _CODES, dbus_signatures
+from hs_dbus_signature import dbus_signatures
+
+from hs_dbus_signature._signature import _CODES
 
 
 @strategies.composite

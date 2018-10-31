@@ -56,7 +56,7 @@ def dbus_signatures(*,
     Structs may not be empty, so min_struct_len is 1. However, the empty
     string is a valid signature, so min_complete_types is 0.
     """
-    if not set(_CODES) - set(blacklist or ''):
+    if blacklist is not None and frozenset(blacklist) >= frozenset(_CODES):
         raise InvalidArgument(
             "all type codes blacklisted, no signature possible")
 
@@ -78,7 +78,9 @@ def dbus_signatures(*,
         raise InvalidArgument(
             "minimum struct length specified is greater than maximum")
 
-    codes = [x for x in _CODES if x not in (blacklist or '')]
+    codes = _CODES[:] if blacklist is None else [
+        x for x in _CODES if x not in frozenset(blacklist)
+    ]
 
     def extend(strat):
         if not exclude_arrays:

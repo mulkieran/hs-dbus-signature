@@ -5,4 +5,4 @@
 Top level for dbus signatures module.
 """
 
-from ._signature import _CODES, dbus_signatures
+from ._signature import dbus_signatures
