@@ -12,7 +12,6 @@ from hypothesis.strategies import recursive
 from hypothesis.strategies import sampled_from
 from hypothesis.strategies import tuples
 
-
 _CODES = ('b', 'd', 'g', 'h', 'i', 'n', 'o', 'q', 's', 't', 'u', 'v', 'x', 'y')
 
 
@@ -86,16 +85,15 @@ def dbus_signatures(*,
             strat |= strat.map(lambda v: 'a' + v)
         if not exclude_structs:
             strat |= lists(
-                strat, min_size=min_struct_len, max_size=max_struct_len
-            ).map(lambda v: '(' + ''.join(v) + ')')
+                strat, min_size=min_struct_len,
+                max_size=max_struct_len).map(lambda v: '(' + ''.join(v) + ')')
         if not exclude_dicts:
             strat |= tuples(
-                sampled_from([c for c in codes if c != 'v']), strat
-            ).map(lambda kv: 'a{%s%s}' % kv)
+                sampled_from([c for c in codes if c != 'v']),
+                strat).map(lambda kv: 'a{%s%s}' % kv)
         return strat
 
     return lists(
         recursive(sampled_from(codes), extend, max_leaves=max_codes),
         min_size=min_complete_types,
-        max_size=max_complete_types
-    ).map(''.join)
+        max_size=max_complete_types).map(''.join)
