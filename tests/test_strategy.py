@@ -67,12 +67,12 @@ class SignatureStrategyTestCase(unittest.TestCase):
         )
     )
     @settings(max_examples=50, suppress_health_check=[HealthCheck.too_slow])
-    def testOmitsBlacklist(self, strategy):
+    def test_omits_blacklist(self, strategy):
         """
         Make sure all characters in blacklist are missing from signature.
         """
         (blacklist, signature) = strategy
-        assert [x for x in blacklist if x in signature] == []
+        self.assertEqual([x for x in blacklist if x in signature], [])
 
     @given(
         strategies.integers(min_value=2, max_value=10). \
@@ -89,25 +89,26 @@ class SignatureStrategyTestCase(unittest.TestCase):
         )
     )
     @settings(max_examples=50, suppress_health_check=[HealthCheck.too_slow])
-    def testBounds(self, strategy):
+    def test_bounds(self, strategy):
         """
         Verify that the number of codes in a single complete type does not
         exceed the max number of codes, so long as dict entry types are omitted.
         """
         (max_codes, signature) = strategy
         leaves = [x for x in signature if x in _CODES]
-        assert len(leaves) <= max_codes
+        self.assertLessEqual(len(leaves), max_codes)
 
     @given(strategies.data())  # pylint: disable=no-value-for-parameter
     @settings(max_examples=50, suppress_health_check=[HealthCheck.too_slow])
-    def testNoBlacklist(self, data):
+    # pylint: disable=no-self-use
+    def test_no_blacklist(self, data):
         """
         Just make sure there is a result for an arbitrary legal strategy.
         """
         # pylint: disable=no-value-for-parameter
         data.draw(data.draw(dbus_signature_strategy()))
 
-    def testSuperSetBlacklist(self):
+    def test_superset_blacklist(self):
         """
         Verify correct behavior when blacklist contains all type codes.
         """
@@ -115,35 +116,35 @@ class SignatureStrategyTestCase(unittest.TestCase):
         with self.assertRaises(errors.InvalidArgument):
             dbus_signatures(blacklist=blacklist)
 
-    def testConflictingMinMax(self):
+    def test_conflicting_min_max(self):
         """
         If the minimum complete types is greater than the maximum, must fail.
         """
         with self.assertRaises(errors.InvalidArgument):
             dbus_signatures(min_complete_types=3, max_complete_types=2)
 
-    def testNegativeMax(self):
+    def test_negative_max(self):
         """
         If the max is less than 0, must fail.
         """
         with self.assertRaises(errors.InvalidArgument):
             dbus_signatures(min_complete_types=-1)
 
-    def testNonPositiveMax(self):
+    def test_non_positive_max(self):
         """
         If the maximum struct length is less than 1, must fail.
         """
         with self.assertRaises(errors.InvalidArgument):
             dbus_signatures(min_struct_len=0)
 
-    def testConflictingMinMaxStructLen(self):
+    def test_conflicting_min_max_struct_len(self):
         """
         If the minimum complete types is greater than the maximum, must fail.
         """
         with self.assertRaises(errors.InvalidArgument):
             dbus_signatures(min_struct_len=3, max_struct_len=2)
 
-    def testMaxTypeCodes(self):
+    def test_max_type_codes(self):
         """
         If the maximum type codes is less than 1, must fail.
         """
