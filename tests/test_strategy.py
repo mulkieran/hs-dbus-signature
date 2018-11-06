@@ -72,7 +72,7 @@ class SignatureStrategyTestCase(unittest.TestCase):
         Make sure all characters in blacklist are missing from signature.
         """
         (blacklist, signature) = strategy
-        assert [x for x in blacklist if x in signature] == []
+        self.assertEqual([x for x in blacklist if x in signature], [])
 
     @given(
         strategies.integers(min_value=2, max_value=10). \
@@ -96,10 +96,11 @@ class SignatureStrategyTestCase(unittest.TestCase):
         """
         (max_codes, signature) = strategy
         leaves = [x for x in signature if x in _CODES]
-        assert len(leaves) <= max_codes
+        self.assertLessEqual(len(leaves), max_codes)
 
     @given(strategies.data())  # pylint: disable=no-value-for-parameter
     @settings(max_examples=50, suppress_health_check=[HealthCheck.too_slow])
+    # pylint: disable=no-self-use
     def testNoBlacklist(self, data):
         """
         Just make sure there is a result for an arbitrary legal strategy.

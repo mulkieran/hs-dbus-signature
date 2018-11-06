@@ -11,7 +11,6 @@ arg_map = {
     ],
     "tests": [
         "--reports=no", "--disable=I", "--disable=invalid-name",
-        "--disable=no-self-use",
         "--msg-template='{path}:{line}: [{msg_id}({symbol}), {obj}] {msg}'"
     ]
 }
