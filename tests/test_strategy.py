@@ -5,6 +5,7 @@
 Test the signature producing strategy.
 """
 
+from os import sys
 import unittest
 
 from hypothesis import errors
@@ -16,6 +17,10 @@ from hypothesis import HealthCheck
 from hs_dbus_signature import dbus_signatures
 
 from hs_dbus_signature._signature import _CODES
+
+settings.register_profile("tracing", deadline=None)
+if sys.gettrace() is not None:
+    settings.load_profile("tracing")
 
 
 @strategies.composite
