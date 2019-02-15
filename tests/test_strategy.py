@@ -5,6 +5,7 @@
 Test the signature producing strategy.
 """
 
+from os import environ
 from os import sys
 import unittest
 
@@ -19,7 +20,7 @@ from hs_dbus_signature import dbus_signatures
 from hs_dbus_signature._signature import _CODES
 
 settings.register_profile("tracing", deadline=None)
-if sys.gettrace() is not None:
+if sys.gettrace() is not None or environ.get('TRAVIS') is not None:
     settings.load_profile("tracing")
 
 
