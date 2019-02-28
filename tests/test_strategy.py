@@ -20,7 +20,7 @@ from hs_dbus_signature import dbus_signatures
 from hs_dbus_signature._signature import _CODES
 
 settings.register_profile("tracing", deadline=None)
-if sys.gettrace() is not None or environ.get('TRAVIS') is not None:
+if sys.gettrace() is not None or environ.get("TRAVIS") is not None:
     settings.load_profile("tracing")
 
 
@@ -34,15 +34,20 @@ def dbus_signature_strategy(draw):
     max_complete_types = draw(
         strategies.one_of(
             strategies.integers(min_value=min_complete_types, max_value=5),
-            strategies.none()))
+            strategies.none(),
+        )
+    )
     min_struct_len = draw(strategies.integers(min_value=1, max_value=5))
     max_struct_len = draw(
         strategies.one_of(
             strategies.integers(min_value=min_struct_len, max_value=5),
-            strategies.none()))
+            strategies.none(),
+        )
+    )
     blacklist_chars = strategies.frozensets(
-        elements=strategies.sampled_from(_CODES), max_size=len(_CODES) - 1)
-    blacklist = draw(strategies.none() | blacklist_chars.map(''.join))
+        elements=strategies.sampled_from(_CODES), max_size=len(_CODES) - 1
+    )
+    blacklist = draw(strategies.none() | blacklist_chars.map("".join))
 
     return dbus_signatures(
         max_codes=max_codes,
@@ -53,7 +58,8 @@ def dbus_signature_strategy(draw):
         exclude_arrays=not draw(strategies.booleans()),
         exclude_dicts=not draw(strategies.booleans()),
         exclude_structs=not draw(strategies.booleans()),
-        blacklist=blacklist)
+        blacklist=blacklist,
+    )
 
 
 class SignatureStrategyTestCase(unittest.TestCase):
@@ -64,11 +70,12 @@ class SignatureStrategyTestCase(unittest.TestCase):
     @given(
         strategies.lists(
             strategies.sampled_from(_CODES),
-            min_size=1, max_size=len(_CODES) - 1, unique=True
+            min_size=1,
+            max_size=len(_CODES) - 1,
+            unique=True,
         ).flatmap(
             lambda x: strategies.tuples(
-                strategies.just(x),
-                dbus_signatures(blacklist=x)
+                strategies.just(x), dbus_signatures(blacklist=x)
             )
         )
     )
@@ -81,16 +88,15 @@ class SignatureStrategyTestCase(unittest.TestCase):
         self.assertEqual([x for x in blacklist if x in signature], [])
 
     @given(
-        strategies.integers(min_value=2, max_value=10). \
-        flatmap(
+        strategies.integers(min_value=2, max_value=10).flatmap(
             lambda x: strategies.tuples(
                 strategies.just(x),
                 dbus_signatures(
                     max_codes=x,
                     min_complete_types=1,
                     max_complete_types=1,
-                    exclude_dicts=True
-                )
+                    exclude_dicts=True,
+                ),
             )
         )
     )
@@ -118,7 +124,7 @@ class SignatureStrategyTestCase(unittest.TestCase):
         """
         Verify correct behavior when blacklist contains all type codes.
         """
-        blacklist = ''.join(_CODES)
+        blacklist = "".join(_CODES)
         with self.assertRaises(errors.InvalidArgument):
             dbus_signatures(blacklist=blacklist)
 
