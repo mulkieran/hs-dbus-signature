@@ -1,18 +1,14 @@
 os: linux
 language: python
-python:
-  - "3.5"
-  - "3.6"
+python: 3.7
 
 branches:
-  only:
-    - master
+  only: master
 
 env:
-  - TASK=fmt
+  - TASK=fmt-travis
   - TASK=lint
   - TASK=test
   - TASK=coverage
 
-script:
-    - make -f Makefile $TASK
+script: make -f Makefile $TASK
