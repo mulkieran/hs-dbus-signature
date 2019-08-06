@@ -6,7 +6,7 @@ branches:
   only: master
 
 env:
-  - TASK=fmt
+  - TASK=fmt-travis
   - TASK=lint
   - TASK=test
   - TASK=coverage
