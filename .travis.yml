@@ -3,8 +3,7 @@ language: python
 python: 3.7
 
 branches:
-  only:
-    - master
+  only: master
 
 env:
   - TASK=fmt
@@ -12,5 +11,4 @@ env:
   - TASK=test
   - TASK=coverage
 
-script:
-    - make -f Makefile $TASK
+script: make -f Makefile $TASK
