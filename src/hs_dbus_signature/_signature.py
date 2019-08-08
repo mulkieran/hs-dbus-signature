@@ -12,19 +12,22 @@ from hypothesis.strategies import recursive
 from hypothesis.strategies import sampled_from
 from hypothesis.strategies import tuples
 
-_CODES = ('b', 'd', 'g', 'h', 'i', 'n', 'o', 'q', 's', 't', 'u', 'v', 'x', 'y')
+_CODES = ("b", "d", "g", "h", "i", "n", "o", "q", "s", "t", "u", "v", "x", "y")
 
 
-def dbus_signatures(*,
-                    max_codes=5,
-                    min_complete_types=0,
-                    max_complete_types=5,
-                    min_struct_len=1,
-                    max_struct_len=5,
-                    exclude_arrays=False,
-                    exclude_dicts=False,
-                    exclude_structs=False,
-                    blacklist=None):
+def dbus_signatures(
+    # pylint: disable=bad-continuation
+    *,
+    max_codes=5,
+    min_complete_types=0,
+    max_complete_types=5,
+    min_struct_len=1,
+    max_struct_len=5,
+    exclude_arrays=False,
+    exclude_dicts=False,
+    exclude_structs=False,
+    blacklist=None
+):
     """
     Return a strategy for generating dbus signatures.
 
@@ -57,8 +60,7 @@ def dbus_signatures(*,
     string is a valid signature, so min_complete_types is 0.
     """
     if blacklist is not None and frozenset(blacklist) >= frozenset(_CODES):
-        raise InvalidArgument(
-            "all type codes blacklisted, no signature possible")
+        raise InvalidArgument("all type codes blacklisted, no signature possible")
 
     if max_codes < 1:
         raise InvalidArgument("can not have signature with 0 type codes")
@@ -69,33 +71,33 @@ def dbus_signatures(*,
     if min_struct_len < 1:
         raise InvalidArgument("can not have struct of zero length")
 
-    if max_complete_types is not None and \
-       min_complete_types > max_complete_types:
-        raise InvalidArgument(
-            "minimum complete types specified greater than maximum")
+    if max_complete_types is not None and min_complete_types > max_complete_types:
+        raise InvalidArgument("minimum complete types specified greater than maximum")
 
     if max_struct_len is not None and max_struct_len < min_struct_len:
-        raise InvalidArgument(
-            "minimum struct length specified is greater than maximum")
+        raise InvalidArgument("minimum struct length specified is greater than maximum")
 
-    codes = _CODES[:] if blacklist is None else [
-        x for x in _CODES if x not in frozenset(blacklist)
-    ]
+    codes = (
+        _CODES[:]
+        if blacklist is None
+        else [x for x in _CODES if x not in frozenset(blacklist)]
+    )
 
     def extend(strat):
         if not exclude_arrays:
-            strat |= strat.map(lambda v: 'a' + v)
+            strat |= strat.map(lambda v: "a" + v)
         if not exclude_structs:
-            strat |= lists(
-                strat, min_size=min_struct_len,
-                max_size=max_struct_len).map(lambda v: '(' + ''.join(v) + ')')
+            strat |= lists(strat, min_size=min_struct_len, max_size=max_struct_len).map(
+                lambda v: "(" + "".join(v) + ")"
+            )
         if not exclude_dicts:
-            strat |= tuples(
-                sampled_from([c for c in codes if c != 'v']),
-                strat).map(lambda kv: 'a{%s%s}' % kv)
+            strat |= tuples(sampled_from([c for c in codes if c != "v"]), strat).map(
+                lambda kv: "a{%s%s}" % kv
+            )
         return strat
 
     return lists(
         recursive(sampled_from(codes), extend, max_leaves=max_codes),
         min_size=min_complete_types,
-        max_size=max_complete_types).map(''.join)
+        max_size=max_complete_types,
+    ).map("".join)
