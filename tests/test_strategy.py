@@ -5,18 +5,15 @@
 Test the signature producing strategy.
 """
 
-from os import environ
-from os import sys
+# isort: STDLIB
 import unittest
+from os import environ, sys
 
-from hypothesis import errors
-from hypothesis import given
-from hypothesis import settings
-from hypothesis import strategies
-from hypothesis import HealthCheck
+# isort: THIRDPARTY
+from hypothesis import HealthCheck, errors, given, settings, strategies
 
+# isort: LOCAL
 from hs_dbus_signature import dbus_signatures
-
 from hs_dbus_signature._signature import _CODES
 
 settings.register_profile("tracing", deadline=None)

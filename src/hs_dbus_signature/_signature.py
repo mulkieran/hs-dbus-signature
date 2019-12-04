@@ -5,12 +5,9 @@
 A strategy for generating dbus signatures.
 """
 
+# isort: THIRDPARTY
 from hypothesis.errors import InvalidArgument
-
-from hypothesis.strategies import lists
-from hypothesis.strategies import recursive
-from hypothesis.strategies import sampled_from
-from hypothesis.strategies import tuples
+from hypothesis.strategies import lists, recursive, sampled_from, tuples
 
 _CODES = ("b", "d", "g", "h", "i", "n", "o", "q", "s", "t", "u", "v", "x", "y")
 
