@@ -5,11 +5,29 @@
 A strategy for generating dbus signatures.
 """
 
+# isort: STDLIB
+from typing import Sequence
+
 # isort: THIRDPARTY
 from hypothesis.errors import InvalidArgument
 from hypothesis.strategies import lists, recursive, sampled_from, tuples
 
-_CODES = ("b", "d", "g", "h", "i", "n", "o", "q", "s", "t", "u", "v", "x", "y")
+_CODES: Sequence[str] = (
+    "b",
+    "d",
+    "g",
+    "h",
+    "i",
+    "n",
+    "o",
+    "q",
+    "s",
+    "t",
+    "u",
+    "v",
+    "x",
+    "y",
+)
 
 
 def dbus_signatures(
