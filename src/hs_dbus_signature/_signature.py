@@ -6,13 +6,13 @@ A strategy for generating dbus signatures.
 """
 
 # isort: STDLIB
-from typing import Sequence
+from typing import Tuple
 
 # isort: THIRDPARTY
 from hypothesis.errors import InvalidArgument
-from hypothesis.strategies import lists, recursive, sampled_from, tuples
+from hypothesis.strategies import SearchStrategy, lists, recursive, sampled_from, tuples
 
-_CODES: Sequence[str] = (
+_CODES: Tuple[str, str, str, str, str, str, str, str, str, str, str, str, str, str] = (
     "b",
     "d",
     "g",
@@ -33,16 +33,16 @@ _CODES: Sequence[str] = (
 def dbus_signatures(
     # pylint: disable=bad-continuation
     *,
-    max_codes=5,
-    min_complete_types=0,
-    max_complete_types=5,
-    min_struct_len=1,
-    max_struct_len=5,
-    exclude_arrays=False,
-    exclude_dicts=False,
-    exclude_structs=False,
-    blacklist=None
-):
+    max_codes: int = 5,
+    min_complete_types: int = 0,
+    max_complete_types: int = 5,
+    min_struct_len: int = 1,
+    max_struct_len: int = 5,
+    exclude_arrays: bool = False,
+    exclude_dicts: bool = False,
+    exclude_structs: bool = False,
+    blacklist: str = None
+) -> SearchStrategy[str]:
     """
     Return a strategy for generating dbus signatures.
 
@@ -97,7 +97,7 @@ def dbus_signatures(
         if codes == []:
             raise InvalidArgument("all type codes blacklisted, no signature possible")
 
-    def extend(strat):
+    def extend(strat: SearchStrategy[str]) -> SearchStrategy[str]:
         if not exclude_arrays:
             strat |= strat.map(lambda v: "a" + v)
         if not exclude_structs:
@@ -106,7 +106,7 @@ def dbus_signatures(
             )
         if not exclude_dicts:
             strat |= tuples(sampled_from([c for c in codes if c != "v"]), strat).map(
-                lambda kv: "a{%s%s}" % kv
+                lambda kv: "a{%s%s}" % kv  # type: ignore
             )
         return strat
 
