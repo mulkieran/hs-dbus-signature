@@ -1,3 +1,4 @@
+---
 os: linux
 language: python
 python: 3.7
@@ -10,5 +11,14 @@ env:
   - TASK=lint
   - TASK=test
   - TASK=coverage
+
+jobs:
+  include:
+
+    # VERIFICATION OF TEST INFRASTRUCTURE
+    - name: "run yamllint on .travis.yml"
+      python: "3.7.6"
+      install: pip install yamllint
+      script: yamllint .travis.yml
 
 script: make -f Makefile $TASK
