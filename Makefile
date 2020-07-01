@@ -29,3 +29,7 @@ archive:
 .PHONY: upload-release
 upload-release:
 	python setup.py register sdist upload
+
+.PHONY: yamllint
+yamllint:
+	yamllint --strict .travis.yml
