@@ -63,3 +63,8 @@ This strategy makes use of the Hypothesis higher-order strategy, recursive(),
 which is discussed here: http://hypothesis.works/articles/recursive-data/.
 
 It is only supported for Python 3 as it uses Python 3 only syntax.
+
+Downstream packagers, if incorporating testing into their packaging, are
+encouraged to use only the tests in the test_deterministic.py module, to
+avoid testing failures that may arise due to the non-deterministic behavior
+of Hypothesis tests.
