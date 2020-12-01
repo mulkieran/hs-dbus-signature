@@ -1,4 +1,4 @@
-hs-dbus-signature 0.6 (UNRELEASED)
+hs-dbus-signature 0.7 (UNRELEASED)
 ==================================
 
 Recommended Python interpreter: 3.7.9
