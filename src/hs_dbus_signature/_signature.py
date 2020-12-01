@@ -78,6 +78,11 @@ def dbus_signatures(
         if codes == []:
             raise InvalidArgument("all type codes blacklisted, no signature possible")
 
+    # The keys in a dict are not permitted to be variants, so if the only code
+    # allowed is 'v', exclude dicts.
+    if codes == ["v"]:
+        exclude_dicts = True
+
     def extend(strat):
         if not exclude_arrays:
             strat |= strat.map(lambda v: "a" + v)

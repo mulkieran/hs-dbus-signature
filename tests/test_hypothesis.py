@@ -85,6 +85,21 @@ class SignatureStrategyHypothesisTestCase(unittest.TestCase):
         self.assertEqual([x for x in blacklist if x in signature], [])
 
     @given(
+        strategies.just([x for x in _CODES if x != "v"]).flatmap(
+            lambda x: strategies.tuples(
+                strategies.just(x), dbus_signatures(blacklist=x)
+            )
+        )
+    )
+    @settings(max_examples=5, suppress_health_check=[HealthCheck.too_slow])
+    def test_blacklist_all_but_v(self, strategy):
+        """
+        Test correct behavior when blacklist excludes all codes but 'v'.
+        """
+        (blacklist, signature) = strategy
+        self.assertEqual([x for x in blacklist if x in signature], [])
+
+    @given(
         strategies.integers(min_value=2, max_value=10).flatmap(
             lambda x: strategies.tuples(
                 strategies.just(x),
