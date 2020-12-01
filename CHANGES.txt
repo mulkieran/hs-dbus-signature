@@ -1,0 +1,41 @@
+hs-dbus-signature 0.6 (UNRELEASED)
+==================================
+
+Recommended Python interpreter: 3.7.9
+Recommended tox version: 3.13.2
+Python auto-formatter: black (19.10b0)
+Python import sorter: isort (4.3.21)
+YAML linter: yamllint (1.23.0)
+
+
+- Rewrite strategy:
+  https://github.com/stratis-storage/hs-dbus-signature/pull/29
+  https://github.com/stratis-storage/hs-dbus-signature/pull/16
+
+- Split tests into two kinds, deterministic and Hypothesis based:
+  https://github.com/stratis-storage/hs-dbus-signature/pull/38
+
+- Fix a bug, where if the only code allowed was 'v' an exception was raised:
+  https://github.com/stratis-storage/hs-dbus-signature/pull/43
+
+- Add Framework::Hypothesis classification:
+  https://github.com/stratis-storage/hs-dbus-signature/pull/18
+
+- Tidies and Maintenance:
+  https://github.com/stratis-storage/hs-dbus-signature/pull/39
+  https://github.com/stratis-storage/hs-dbus-signature/pull/37
+  https://github.com/stratis-storage/hs-dbus-signature/pull/35
+  https://github.com/stratis-storage/hs-dbus-signature/pull/31
+  https://github.com/stratis-storage/hs-dbus-signature/pull/28
+  https://github.com/stratis-storage/hs-dbus-signature/pull/27
+  https://github.com/stratis-storage/hs-dbus-signature/pull/26
+  https://github.com/stratis-storage/hs-dbus-signature/pull/25
+  https://github.com/stratis-storage/hs-dbus-signature/pull/24
+  https://github.com/stratis-storage/hs-dbus-signature/pull/23
+  https://github.com/stratis-storage/hs-dbus-signature/pull/21
+  https://github.com/stratis-storage/hs-dbus-signature/pull/13
+  https://github.com/stratis-storage/hs-dbus-signature/pull/12
+  https://github.com/stratis-storage/hs-dbus-signature/pull/11
+  https://github.com/stratis-storage/hs-dbus-signature/pull/9
+  https://github.com/stratis-storage/hs-dbus-signature/pull/8
+  https://github.com/stratis-storage/hs-dbus-signature/pull/7
