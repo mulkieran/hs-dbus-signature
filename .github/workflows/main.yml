@@ -16,10 +16,7 @@ jobs:
   tox-checks:
     strategy:
       matrix:
-        include:
-          - task: make -f Makefile lint
-          - task: make -f Makefile test
-          - task: make -f Makefile coverage
+        task: [lint, test, coverage]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -29,7 +26,7 @@ jobs:
       - name: Install dependencies
         run: pip3 install tox==3.13.2
       - name: Run test
-        run: ${{ matrix.task }}
+        run: make -f Makefile ${{ matrix.task }}
 
   # FORMAT
   fmt:
