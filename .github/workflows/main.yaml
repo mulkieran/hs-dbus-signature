@@ -1,0 +1,51 @@
+---
+name: hs-dbus-signature CI
+
+# yamllint disable-line rule:truthy
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  checks:
+    strategy:
+      matrix:
+        include:
+          - python-version: 3.7.9
+            dependencies: black==19.10b0 isort==4.3.21
+            task: >
+              # Path added in as workaround for executables not being found
+              # in Github Actions after being installed through pip
+              (cd developer_tools;
+              PATH=$GITHUB_WORKSPACE/.local/bin:$PATH make fmt-travis) &&
+              (cd tests/client-dbus;
+              PATH=$GITHUB_WORKSPACE/.local/bin:$PATH make fmt-travis)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python_version }}
+      - name: Run test
+      - run: ${{ matrix.task }}
+
+  # VERIFICATION OF TEST INFRASTRUCTURE
+  yamllint:
+    env:
+      TASK: yamllint
+      PYTHON: 3.7.9
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: ${{ env.PYTHON }}
+      - name: Install dependencies
+        run: pip3 install yamllint==1.23.0
+      - name: Run yamllint
+        run: make -f Makefile $TASK
