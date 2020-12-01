@@ -8,18 +8,14 @@ Python import sorter: isort (4.3.21)
 YAML linter: yamllint (1.23.0)
 
 
-- Rewrite strategy:
+- Raise an exception eagerly if the strategy allows no codes:
   https://github.com/stratis-storage/hs-dbus-signature/pull/29
-  https://github.com/stratis-storage/hs-dbus-signature/pull/16
 
 - Split tests into two kinds, deterministic and Hypothesis based:
   https://github.com/stratis-storage/hs-dbus-signature/pull/38
 
 - Fix a bug, where if the only code allowed was 'v' an exception was raised:
   https://github.com/stratis-storage/hs-dbus-signature/pull/43
-
-- Add Framework::Hypothesis classification:
-  https://github.com/stratis-storage/hs-dbus-signature/pull/18
 
 - Tidies and Maintenance:
   https://github.com/stratis-storage/hs-dbus-signature/pull/45
@@ -33,10 +29,3 @@ YAML linter: yamllint (1.23.0)
   https://github.com/stratis-storage/hs-dbus-signature/pull/25
   https://github.com/stratis-storage/hs-dbus-signature/pull/24
   https://github.com/stratis-storage/hs-dbus-signature/pull/23
-  https://github.com/stratis-storage/hs-dbus-signature/pull/21
-  https://github.com/stratis-storage/hs-dbus-signature/pull/13
-  https://github.com/stratis-storage/hs-dbus-signature/pull/12
-  https://github.com/stratis-storage/hs-dbus-signature/pull/11
-  https://github.com/stratis-storage/hs-dbus-signature/pull/9
-  https://github.com/stratis-storage/hs-dbus-signature/pull/8
-  https://github.com/stratis-storage/hs-dbus-signature/pull/7
