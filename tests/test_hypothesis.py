@@ -7,7 +7,7 @@ Hypothesis-based testing of the signature producing strategy.
 
 # isort: STDLIB
 import unittest
-from os import environ, sys
+from os import sys
 
 # isort: THIRDPARTY
 from hypothesis import HealthCheck, given, settings, strategies
@@ -17,7 +17,7 @@ from hs_dbus_signature import dbus_signatures
 from hs_dbus_signature._signature import _CODES
 
 settings.register_profile("tracing", deadline=None)
-if sys.gettrace() is not None or environ.get("TRAVIS") is not None:
+if sys.gettrace() is not None:
     settings.load_profile("tracing")
 
 
