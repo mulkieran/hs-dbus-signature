@@ -1,5 +1,5 @@
-hs-dbus-signature 0.7 (UNRELEASED)
-==================================
+hs-dbus-signature 0.7
+=====================
 
 Recommended Python interpreter: 3.7.9
 Recommended tox version: 3.13.2
