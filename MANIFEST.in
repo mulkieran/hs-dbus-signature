@@ -1,7 +1,13 @@
-recursive-include src/hs_dbus_signature *.py
-recursive-include tests *.py
+include CHANGES.txt
 include check.py
+include LICENSE.txt
+include Makefile
+include MANIFEST.in
+include README.rst
+include requirements.txt
+include setup.cfg
+include setup.py
+include src/hs_dbus_signature/*.py
+include tests/*.py
 include tox.ini
-global-include requirements.txt
-include LICENSE README.rst
-include setup.py setup.cfg
+include .isort.cfg
