@@ -1,5 +1,4 @@
 include CHANGES.txt
-include check.py
 include LICENSE.txt
 include Makefile
 include MANIFEST.in
