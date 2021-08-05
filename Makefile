@@ -2,7 +2,9 @@ TOX=tox
 
 .PHONY: lint
 lint:
-	$(TOX) -c tox.ini -e lint
+	pylint setup.py
+	pylint src/hs_dbus_signature
+	pylint tests
 
 .PHONY: fmt
 fmt:
@@ -16,11 +18,13 @@ fmt-travis:
 
 .PHONY: coverage
 coverage:
-	$(TOX) -c tox.ini -e coverage
+	coverage --version
+	coverage run --timid --branch -m unittest discover tests
+	coverage report -m --fail-under=100 --show-missing --include="./src/*"
 
 .PHONY: test
 test:
-	$(TOX) -c tox.ini -e test
+	python3 -m unittest discover --verbose tests
 
 .PHONY: archive
 archive:
