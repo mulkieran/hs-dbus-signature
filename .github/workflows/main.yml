@@ -12,30 +12,24 @@ on:
   workflow_dispatch:
 
 jobs:
-  # MANDATORY CHECKS THAT USE TOX
-  tox-checks:
-    strategy:
-      matrix:
-        task: [lint, test, coverage]
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-python@v2
-        with:
-          python-version: 3.9.2
-      - name: Install dependencies
-        run: pip3 install tox==3.19.0
-      - name: Run test
-        run: make -f Makefile ${{ matrix.task }}
-
   development_environment_checks:
     strategy:
       matrix:
         include:
           - dependencies: black python3-isort
-            task: fmt-travis
+            task: make -f Makefile fmt-travis
           - dependencies: yamllint
-            task: yamllint
+            task: make -f Makefile yamllint
+          - dependencies: >
+              pylint
+              python-hypothesis
+            task: PYTHONPATH=./src make -f Makefile lint
+          - dependencies: python-hypothesis
+            task: PYTHONPATH=./src make -f Makefile test
+          - dependencies: >
+              python-coverage
+              python-hypothesis
+            task: PYTHONPATH=./src make -f Makefile coverage
     runs-on: ubuntu-latest
     container: fedora:33
     steps:
@@ -45,5 +39,5 @@ jobs:
           dnf install -y
           make
           ${{ matrix.dependencies }}
-      - name: Run test
-        run: make -f Makefile ${{ matrix.task }}
+      - name: ${{ matrix.task }}
+        run: ${{ matrix.task }}
