@@ -22,7 +22,7 @@ def dbus_signatures(
     exclude_arrays=False,
     exclude_dicts=False,
     exclude_structs=False,
-    blacklist=None
+    blacklist=None,
 ):
     """
     Return a strategy for generating dbus signatures.
@@ -85,14 +85,14 @@ def dbus_signatures(
 
     def extend(strat):
         if not exclude_arrays:
-            strat |= strat.map(lambda v: "a" + v)
+            strat |= strat.map(lambda v: f"a{v}")
         if not exclude_structs:
             strat |= lists(strat, min_size=min_struct_len, max_size=max_struct_len).map(
-                lambda v: "(" + "".join(v) + ")"
+                lambda v: f"({''.join(v)})"
             )
         if not exclude_dicts:
             strat |= tuples(sampled_from([c for c in codes if c != "v"]), strat).map(
-                lambda kv: "a{%s%s}" % kv
+                lambda kv: f"a{{{kv[0]}{kv[1]}}}"
             )
         return strat
 
