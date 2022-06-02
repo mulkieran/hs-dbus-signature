@@ -71,12 +71,12 @@ def dbus_signatures(
     if max_struct_len is not None and max_struct_len < min_struct_len:
         raise InvalidArgument("minimum struct length specified is greater than maximum")
 
-    if blacklist is None:
-        codes = list(_CODES)
-    else:
-        codes = list(frozenset(_CODES).difference(frozenset(blacklist)))
-        if codes == []:
-            raise InvalidArgument("all type codes blacklisted, no signature possible")
+    codes = list(
+        frozenset(_CODES).difference(frozenset([] if blacklist is None else blacklist))
+    )
+
+    if not codes:
+        raise InvalidArgument("all type codes prohibited, no signature possible")
 
     # The keys in a dict are not permitted to be variants, so if the only code
     # allowed is 'v', exclude dicts.
