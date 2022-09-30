@@ -23,7 +23,7 @@ jobs:
             task: make -f Makefile yamllint
           - dependencies: black python3-isort
             task: make -f Makefile fmt-travis
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     container: fedora:36  # NEXT DEVELOPMENT ENVIRONMENT
     steps:
       - uses: actions/checkout@v2
