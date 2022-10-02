@@ -1,3 +1,32 @@
+hs-dbus-signature 0.8 (UNRELEASED)
+==================================
+Recommended development release: Fedora 36
+
+- Modernize packaging:
+  https://github.com/stratis-storage/hs-dbus-signature/pull/49
+
+- Tidies and Maintenance:
+  https://github.com/stratis-storage/hs-dbus-signature/pull/70
+  https://github.com/stratis-storage/hs-dbus-signature/pull/69
+  https://github.com/stratis-storage/hs-dbus-signature/pull/68
+  https://github.com/stratis-storage/hs-dbus-signature/pull/67
+  https://github.com/stratis-storage/hs-dbus-signature/pull/66
+  https://github.com/stratis-storage/hs-dbus-signature/pull/65
+  https://github.com/stratis-storage/hs-dbus-signature/pull/64
+  https://github.com/stratis-storage/hs-dbus-signature/pull/61
+  https://github.com/stratis-storage/hs-dbus-signature/pull/60
+  https://github.com/stratis-storage/hs-dbus-signature/pull/59
+  https://github.com/stratis-storage/hs-dbus-signature/pull/58
+  https://github.com/stratis-storage/hs-dbus-signature/pull/57
+  https://github.com/stratis-storage/hs-dbus-signature/pull/55
+  https://github.com/stratis-storage/hs-dbus-signature/pull/54
+  https://github.com/stratis-storage/hs-dbus-signature/pull/53
+  https://github.com/stratis-storage/hs-dbus-signature/pull/52
+  https://github.com/stratis-storage/hs-dbus-signature/pull/51
+  https://github.com/stratis-storage/hs-dbus-signature/pull/50
+  https://github.com/stratis-storage/hs-dbus-signature/pull/48
+
+
 hs-dbus-signature 0.7
 =====================
 
