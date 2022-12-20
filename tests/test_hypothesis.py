@@ -124,7 +124,6 @@ class SignatureStrategyHypothesisTestCase(unittest.TestCase):
 
     @given(strategies.data())  # pylint: disable=no-value-for-parameter
     @settings(max_examples=50, suppress_health_check=[HealthCheck.too_slow])
-    # pylint: disable=no-self-use
     def test_no_blacklist(self, data):
         """
         Just make sure there is a result for an arbitrary legal strategy.
