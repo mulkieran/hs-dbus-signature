@@ -7,5 +7,4 @@ include setup.cfg
 include setup.py
 include src/hs_dbus_signature/*.py
 include tests/*.py
-include tox.ini
 include .isort.cfg

@@ -1,5 +1,3 @@
-TOX=tox
-
 .PHONY: lint
 lint:
 	pylint setup.py
