@@ -24,10 +24,6 @@ coverage:
 test:
 	python3 -m unittest discover --verbose tests
 
-.PHONY: archive
-archive:
-	git archive --output=./justbases.tar.gz HEAD
-
 .PHONY: upload-release
 upload-release:
 	python setup.py register sdist upload
