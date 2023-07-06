@@ -30,6 +30,8 @@ jobs:
               python-coverage
               python-hypothesis
             task: PYTHONPATH=./src make -f Makefile coverage
+          - dependencies: python python3-build twine
+            task: make -f Makefile package
     runs-on: ubuntu-latest
     container: fedora:38  # CURRENT DEVELOPMENT ENVIRONMENT
     steps:
