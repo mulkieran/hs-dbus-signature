@@ -14,7 +14,6 @@ jobs:
     strategy:
       matrix:
         include:
-          # PYTHON CHECKS ON NEXT FEDORA PYTHON AND PYTHON TOOLS VERSION
           - dependencies: >
               pylint
               python3-hypothesis
@@ -24,7 +23,7 @@ jobs:
           - dependencies: black python3-isort
             task: make -f Makefile fmt-travis
     runs-on: ubuntu-latest
-    container: fedora:38  # NEXT DEVELOPMENT ENVIRONMENT
+    container: fedora:39  # NEXT DEVELOPMENT ENVIRONMENT
     steps:
       - uses: actions/checkout@v3
       - name: Install dependencies
