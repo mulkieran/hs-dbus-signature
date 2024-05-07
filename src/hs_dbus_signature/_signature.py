@@ -12,7 +12,7 @@ from hypothesis.strategies import lists, recursive, sampled_from, tuples
 _CODES = ("b", "d", "g", "h", "i", "n", "o", "q", "s", "t", "u", "v", "x", "y")
 
 
-def dbus_signatures(
+def dbus_signatures(  # pylint: disable=too-many-arguments
     *,
     max_codes=5,
     min_complete_types=0,
