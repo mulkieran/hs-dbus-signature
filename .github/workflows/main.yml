@@ -23,12 +23,14 @@ jobs:
           - dependencies: >
               pylint
               python-hypothesis
+              python3-setuptools
             task: PYTHONPATH=./src make -f Makefile lint
-          - dependencies: python-hypothesis
+          - dependencies: python-hypothesis python3-setuptools
             task: PYTHONPATH=./src make -f Makefile test
           - dependencies: >
               python-coverage
               python-hypothesis
+              python3-setuptools
             task: PYTHONPATH=./src make -f Makefile coverage
           - dependencies: python python3-build twine
             task: make -f Makefile package
