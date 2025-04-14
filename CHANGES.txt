@@ -1,11 +1,21 @@
 hs-dbus-signature 0.8 (UNRELEASED)
 ==================================
-Recommended development release: Fedora 36
+Recommended development release: Fedora 38
 
 - Modernize packaging:
+  https://github.com/stratis-storage/hs-dbus-signature/pull/83
   https://github.com/stratis-storage/hs-dbus-signature/pull/49
 
 - Tidies and Maintenance:
+  https://github.com/stratis-storage/hs-dbus-signature/pull/84
+  https://github.com/stratis-storage/hs-dbus-signature/pull/82
+  https://github.com/stratis-storage/hs-dbus-signature/pull/81
+  https://github.com/stratis-storage/hs-dbus-signature/pull/80
+  https://github.com/stratis-storage/hs-dbus-signature/pull/79
+  https://github.com/stratis-storage/hs-dbus-signature/pull/78
+  https://github.com/stratis-storage/hs-dbus-signature/pull/77
+  https://github.com/stratis-storage/hs-dbus-signature/pull/76
+  https://github.com/stratis-storage/hs-dbus-signature/pull/75
   https://github.com/stratis-storage/hs-dbus-signature/pull/70
   https://github.com/stratis-storage/hs-dbus-signature/pull/69
   https://github.com/stratis-storage/hs-dbus-signature/pull/68
