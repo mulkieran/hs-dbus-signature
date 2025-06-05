@@ -4,6 +4,8 @@
 """
 A strategy for generating dbus signatures.
 """
+# isort: STDLIB
+from typing import Optional, Sequence, Union
 
 # isort: THIRDPARTY
 from hypothesis.errors import InvalidArgument
@@ -14,15 +16,15 @@ _CODES = ("b", "d", "g", "h", "i", "n", "o", "q", "s", "t", "u", "v", "x", "y")
 
 def dbus_signatures(  # pylint: disable=too-many-arguments
     *,
-    max_codes=5,
-    min_complete_types=0,
-    max_complete_types=5,
-    min_struct_len=1,
-    max_struct_len=5,
-    exclude_arrays=False,
-    exclude_dicts=False,
-    exclude_structs=False,
-    blacklist=None,
+    max_codes: int = 5,
+    min_complete_types: int = 0,
+    max_complete_types: int = 5,
+    min_struct_len: int = 1,
+    max_struct_len: int = 5,
+    exclude_arrays: bool = False,
+    exclude_dicts: bool = False,
+    exclude_structs: bool = False,
+    blacklist: Optional[Union[Sequence[str], str]] = None,
 ):
     """
     Return a strategy for generating dbus signatures.
@@ -35,7 +37,7 @@ def dbus_signatures(  # pylint: disable=too-many-arguments
     :param bool exclude_arrays: whether to exclude arrays
     :param bool exclude_dicts: whether to exclude dicts
     :param bool exclude_structs: whether to exclude structs
-    :param str blacklist: blacklisted symbols, default is None
+    :param blacklist: blacklisted symbols, default is None
 
     :rtype: strategy
     :raises InvalidArgument: if blacklist contains every type code
