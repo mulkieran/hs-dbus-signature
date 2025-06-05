@@ -6,8 +6,8 @@ Hypothesis-based testing of the signature producing strategy.
 """
 
 # isort: STDLIB
+import sys
 import unittest
-from os import sys
 
 # isort: THIRDPARTY
 from hypothesis import HealthCheck, given, settings, strategies

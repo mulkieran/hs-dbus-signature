@@ -3,6 +3,7 @@ lint:
 	pylint setup.py
 	pylint src/hs_dbus_signature
 	pylint tests
+	pyright
 
 .PHONY: fmt
 fmt:
