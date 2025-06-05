@@ -24,7 +24,9 @@ jobs:
               pylint
               python-hypothesis
               python3-setuptools
-            task: PYTHONPATH=./src make -f Makefile lint
+            task: >
+              PATH=${PATH}:/github/home/.local/bin PYTHONPATH=./src
+              make -f Makefile lint
           - dependencies: python-hypothesis python3-setuptools
             task: PYTHONPATH=./src make -f Makefile test
           - dependencies: >
@@ -42,6 +44,9 @@ jobs:
         run: >
           dnf install -y
           make
+          pip
           ${{ matrix.dependencies }}
+      - name: Install pyright
+        run: pip install --user pyright
       - name: ${{ matrix.task }}
         run: ${{ matrix.task }}
