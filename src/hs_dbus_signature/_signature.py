@@ -100,7 +100,7 @@ def dbus_signatures(  # pylint: disable=too-many-arguments
     if codes == ["v"]:
         exclude_dicts = True
 
-    def extend(strat):
+    def extend(strat: SearchStrategy) -> SearchStrategy:
         if not exclude_arrays:
             strat |= strat.map(lambda v: f"a{v}")
         if not exclude_structs:
