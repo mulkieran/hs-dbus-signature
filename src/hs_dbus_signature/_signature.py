@@ -9,7 +9,7 @@ from typing import Optional, Sequence, Tuple, Union
 
 # isort: THIRDPARTY
 from hypothesis.errors import InvalidArgument
-from hypothesis.strategies import lists, recursive, sampled_from, tuples
+from hypothesis.strategies import SearchStrategy, lists, recursive, sampled_from, tuples
 
 _CODES: Tuple[str, str, str, str, str, str, str, str, str, str, str, str, str, str] = (
     "b",
@@ -40,7 +40,7 @@ def dbus_signatures(  # pylint: disable=too-many-arguments
     exclude_dicts: bool = False,
     exclude_structs: bool = False,
     blacklist: Optional[Union[Sequence[str], str]] = None,
-):
+) -> SearchStrategy:
     """
     Return a strategy for generating dbus signatures.
 
