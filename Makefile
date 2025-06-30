@@ -1,3 +1,9 @@
+ifeq ($(origin MONKEYTYPE), undefined)
+  PYTHON = python3
+else
+  PYTHON = monkeytype run
+endif
+
 .PHONY: lint
 lint:
 	pylint setup.py
@@ -23,7 +29,7 @@ coverage:
 
 .PHONY: test
 test:
-	python3 -m unittest discover --verbose tests
+	${PYTHON} -m unittest discover --verbose tests
 
 .PHONY: yamllint
 yamllint:
