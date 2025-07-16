@@ -43,3 +43,10 @@ package:
 legacy-package:
 	python3 setup.py build
 	python3 setup.py install
+
+.PHONY: apply
+apply:
+	@for module in $$(monkeytype list-modules); do \
+	  echo $${module}; \
+	  monkeytype apply  --sample-count --ignore-existing-annotations $${module} > /dev/null; \
+	done
