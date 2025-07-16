@@ -4,6 +4,8 @@ else
   PYTHON = MONKEYTYPE_TRACE_MODULES=hs_dbus_signature monkeytype run
 endif
 
+MONKEYTYPE_MODULES = hs_dbus_signature._signature
+
 .PHONY: lint
 lint:
 	pylint setup.py
@@ -46,7 +48,10 @@ legacy-package:
 
 .PHONY: apply
 apply:
-	@for module in $$(monkeytype list-modules); do \
-	  echo $${module}; \
-	  monkeytype apply  --sample-count --ignore-existing-annotations $${module} > /dev/null; \
+	@echo "Modules traced:"
+	@monkeytype list-modules
+	@echo
+	@echo "Annotating:"
+	@for module in ${MONKEYTYPE_MODULES}; do \
+	  monkeytype apply  --sample-count $${module} > /dev/null; \
 	done
