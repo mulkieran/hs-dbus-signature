@@ -1,7 +1,7 @@
 ifeq ($(origin MONKEYTYPE), undefined)
   PYTHON = python3
 else
-  PYTHON = MONKEYTYPE_TRACE_MODULES=hs_dbus_signature,hypothesis monkeytype run
+  PYTHON = MONKEYTYPE_TRACE_MODULES=hs_dbus_signature monkeytype run
 endif
 
 .PHONY: lint
