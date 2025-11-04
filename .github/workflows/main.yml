@@ -21,6 +21,7 @@ jobs:
           - dependencies: yamllint
             task: make -f Makefile yamllint
           - dependencies: >
+              libatomic
               pylint
               python-hypothesis
               python3-setuptools
