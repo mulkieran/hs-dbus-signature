@@ -1,11 +1,3 @@
-ifeq ($(origin MONKEYTYPE), undefined)
-  PYTHON = python3
-else
-  PYTHON = MONKEYTYPE_TRACE_MODULES=hs_dbus_signature monkeytype run
-endif
-
-MONKEYTYPE_MODULES = hs_dbus_signature._signature
-
 .PHONY: lint
 lint:
 	pylint setup.py
@@ -31,7 +23,7 @@ coverage:
 
 .PHONY: test
 test:
-	${PYTHON} -m unittest discover --verbose tests
+	python3 -m unittest discover --verbose tests
 
 .PHONY: yamllint
 yamllint:
@@ -45,13 +37,3 @@ package:
 legacy-package:
 	python3 setup.py build
 	python3 setup.py install
-
-.PHONY: apply
-apply:
-	@echo "Modules traced:"
-	@monkeytype list-modules
-	@echo
-	@echo "Annotating:"
-	@for module in ${MONKEYTYPE_MODULES}; do \
-	  monkeytype apply  --sample-count $${module} > /dev/null; \
-	done
