@@ -4,10 +4,9 @@
 """
 A strategy for generating dbus signatures.
 """
-# isort: STDLIB
+
 from typing import Optional, Sequence, Tuple, Union
 
-# isort: THIRDPARTY
 from hypothesis.errors import InvalidArgument
 from hypothesis.strategies import SearchStrategy, lists, recursive, sampled_from, tuples
 
@@ -29,7 +28,7 @@ _CODES: Tuple[str, str, str, str, str, str, str, str, str, str, str, str, str, s
 )
 
 
-def dbus_signatures(  # pylint: disable=too-many-arguments
+def dbus_signatures(  # noqa: PLR0913
     *,
     max_codes: int = 5,
     min_complete_types: int = 0,

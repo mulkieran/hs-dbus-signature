@@ -16,18 +16,16 @@ jobs:
     strategy:
       matrix:
         include:
-          - dependencies: black python3-isort
+          - dependencies: ruff
             task: make -f Makefile fmt-travis
           - dependencies: yamllint
             task: make -f Makefile yamllint
           - dependencies: >
               libatomic
-              pylint
               python-hypothesis
               python3-setuptools
-            task: >
-              PATH=${PATH}:/github/home/.local/bin PYTHONPATH=./src
-              make -f Makefile lint
+              ruff
+            task: PATH=${PATH}:/github/home/.local/bin make -f Makefile lint
           - dependencies: python-hypothesis python3-setuptools
             task: PYTHONPATH=./src make -f Makefile test
           - dependencies: >
@@ -36,7 +34,7 @@ jobs:
               python3-setuptools
             task: PYTHONPATH=./src make -f Makefile coverage
           - dependencies: python python3-build twine
-            task: make -f Makefile package
+            task: PYTHONPATH=./src make -f Makefile package
     runs-on: ubuntu-latest
     container: fedora:43  # CURRENT DEVELOPMENT ENVIRONMENT
     steps:
