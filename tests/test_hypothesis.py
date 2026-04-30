@@ -5,14 +5,11 @@
 Hypothesis-based testing of the signature producing strategy.
 """
 
-# isort: STDLIB
 import sys
 import unittest
 
-# isort: THIRDPARTY
 from hypothesis import HealthCheck, given, settings, strategies
 
-# isort: LOCAL
 from hs_dbus_signature import dbus_signatures
 from hs_dbus_signature._signature import _CODES
 

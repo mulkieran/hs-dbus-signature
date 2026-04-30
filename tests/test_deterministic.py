@@ -5,13 +5,10 @@
 Deterministic testing of the signature producing strategy.
 """
 
-# isort: STDLIB
 import unittest
 
-# isort: THIRDPARTY
 from hypothesis import errors
 
-# isort: LOCAL
 from hs_dbus_signature import dbus_signatures
 from hs_dbus_signature._signature import _CODES
 
