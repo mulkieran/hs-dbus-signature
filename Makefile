@@ -35,3 +35,11 @@ package:
 legacy-package:
 	python3 setup.py build
 	python3 setup.py install
+
+.PHONY: check-typos
+check-typos:
+	typos
+
+.PHONY: fix-typos
+fix-typos:
+	typos -w
