@@ -15,9 +15,9 @@ fmt-travis:
 
 .PHONY: coverage
 coverage:
-	coverage --version
-	coverage run --timid --branch -m unittest discover tests
-	coverage report -m --fail-under=100 --show-missing --include="./src/*"
+	python3 -m coverage --version
+	python3 -m coverage run --timid --branch -m unittest discover tests
+	python3 -m coverage report -m --fail-under=100 --show-missing --include="./src/*"
 
 .PHONY: test
 test:
