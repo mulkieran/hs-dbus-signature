@@ -32,7 +32,7 @@ jobs:
           - dependencies: python python3-build twine
             task: PYTHONPATH=./src make -f Makefile package
     runs-on: ubuntu-latest
-    container: fedora:43  # CURRENT DEVELOPMENT ENVIRONMENT
+    container: fedora:44  # CURRENT DEVELOPMENT ENVIRONMENT
     steps:
       - uses: actions/checkout@v6
         with:
@@ -51,4 +51,4 @@ jobs:
   general_checks:
     uses: stratis-storage/github-actions/.github/workflows/reusable_general.yml@master
     with:
-      fedora-container-image-number: 43  # CURRENT DEVELOPMENT ENVIRONMENT
+      fedora-container-image-number: 44  # CURRENT DEVELOPMENT ENVIRONMENT
