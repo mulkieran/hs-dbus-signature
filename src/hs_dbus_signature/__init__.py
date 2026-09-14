@@ -5,5 +5,6 @@
 Top level for dbus signatures module.
 """
 
-from ._signature import dbus_signatures
-from ._version import __version__, __version_info__
+from ._signature import dbus_signatures as dbus_signatures
+from ._version import __version__ as __version__
+from ._version import __version_info__ as __version_info__
