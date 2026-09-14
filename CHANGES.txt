@@ -1,11 +1,50 @@
-hs-dbus-signature 0.8 (UNRELEASED)
-==================================
-Recommended development release: Fedora 36
+hs-dbus-signature 0.7.1
+=======================
+Recommended development release: Fedora 44
+
+- Add type annotations:
+  https://github.com/stratis-storage/hs-dbus-signature/pull/105
+  https://github.com/stratis-storage/hs-dbus-signature/pull/100
+  https://github.com/stratis-storage/hs-dbus-signature/pull/99
+  https://github.com/stratis-storage/hs-dbus-signature/pull/98
+  https://github.com/stratis-storage/hs-dbus-signature/pull/97
+  https://github.com/stratis-storage/hs-dbus-signature/pull/96
+  https://github.com/stratis-storage/hs-dbus-signature/pull/95
+  https://github.com/stratis-storage/hs-dbus-signature/pull/94
+
+- Remove license classifier deprecated by PEP 639:
+  https://github.com/stratis-storage/hs-dbus-signature/pull/92
 
 - Modernize packaging:
+  https://github.com/stratis-storage/hs-dbus-signature/pull/83
   https://github.com/stratis-storage/hs-dbus-signature/pull/49
 
 - Tidies and Maintenance:
+  https://github.com/stratis-storage/hs-dbus-signature/pull/111
+  https://github.com/stratis-storage/hs-dbus-signature/pull/110
+  https://github.com/stratis-storage/hs-dbus-signature/pull/109
+  https://github.com/stratis-storage/hs-dbus-signature/pull/108
+  https://github.com/stratis-storage/hs-dbus-signature/pull/107
+  https://github.com/stratis-storage/hs-dbus-signature/pull/106
+  https://github.com/stratis-storage/hs-dbus-signature/pull/104
+  https://github.com/stratis-storage/hs-dbus-signature/pull/103
+  https://github.com/stratis-storage/hs-dbus-signature/pull/102
+  https://github.com/stratis-storage/hs-dbus-signature/pull/101
+  https://github.com/stratis-storage/hs-dbus-signature/pull/93
+  https://github.com/stratis-storage/hs-dbus-signature/pull/91
+  https://github.com/stratis-storage/hs-dbus-signature/pull/89
+  https://github.com/stratis-storage/hs-dbus-signature/pull/88
+  https://github.com/stratis-storage/hs-dbus-signature/pull/87
+  https://github.com/stratis-storage/hs-dbus-signature/pull/86
+  https://github.com/stratis-storage/hs-dbus-signature/pull/84
+  https://github.com/stratis-storage/hs-dbus-signature/pull/82
+  https://github.com/stratis-storage/hs-dbus-signature/pull/81
+  https://github.com/stratis-storage/hs-dbus-signature/pull/80
+  https://github.com/stratis-storage/hs-dbus-signature/pull/79
+  https://github.com/stratis-storage/hs-dbus-signature/pull/78
+  https://github.com/stratis-storage/hs-dbus-signature/pull/77
+  https://github.com/stratis-storage/hs-dbus-signature/pull/76
+  https://github.com/stratis-storage/hs-dbus-signature/pull/75
   https://github.com/stratis-storage/hs-dbus-signature/pull/70
   https://github.com/stratis-storage/hs-dbus-signature/pull/69
   https://github.com/stratis-storage/hs-dbus-signature/pull/68
