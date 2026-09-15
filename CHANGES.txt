@@ -1,3 +1,11 @@
+hs-dbus-signature 0.8.1
+=======================
+Recommended development release: Fedora 44
+
+- Make packaging metadata pyproject.toml only:
+  https://github.com/stratis-storage/hs-dbus-signature/pull/114
+
+
 hs-dbus-signature 0.8.0
 =======================
 Recommended development release: Fedora 44
